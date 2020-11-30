@@ -1,0 +1,113 @@
+body{
+    display: grid;
+    grid-template-areas: 
+        "nav"
+        "main"
+        "footer";
+    margin: 0;
+    grid-template-columns: 1fr;
+}
+
+nav{
+    grid-area: nav;
+    display: grid;
+    grid-template-areas: 
+    "logo search cart";
+    grid-template-columns: 0.3fr 1fr 0.3fr;
+    background-color: orange;
+}
+
+main{
+    grid-area: main;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+    min-height: 500px;
+}
+/*Scrollar åt fel håll(:*/
+article{
+    background-color: palegreen;
+    height: 250px;
+    overflow: auto;
+    /*white-space: nowrap;*/
+}
+
+section{
+    display: inline-block;
+    box-sizing: border-box;
+    border: 1px solid black;
+    background-color: palevioletred;
+    height: 100%;
+    width: 250px;
+}
+
+footer{
+    grid-area: footer;
+    background-color: orangered;
+    min-height: 100px;
+}
+
+h2{
+    margin: 0;
+}
+
+nav>form>fieldset{
+    display: grid;
+    grid-template-areas: 
+    "text button";
+    border: none;
+}
+
+fieldset>input{
+    height: 50px;
+}
+
+form{
+    width: 100%;
+}
+
+nav>form{
+    grid-area: search;
+}
+
+nav>img{
+    display: block;
+    margin: auto;
+    height: 60px;
+    width: auto;
+}
+
+main>form{
+    box-sizing: border-box;
+    border: 1px solid black;
+    margin-top: 10px;
+}
+
+main>form:first-of-type>fieldset{
+    display: grid;
+    grid-template-areas:
+        "nameText nameText"
+        "text text"
+        "passwordText passwordText"
+        "password password"
+        "none submit";
+}
+
+main>form>fieldset:first-of-type>input[type="text"]{
+    grid-area: text;
+}
+
+main>form>fieldset:first-of-type>input[type="password"]{
+    grid-area: password;
+}
+
+main>form>fieldset:first-of-type>input[type="submit"]{
+    grid-area: submit;
+}
+
+main>form>fieldset>label:first-of-type{
+    grid-area: nameText;
+}
+
+main>form>fieldset>label:last-of-type{
+    grid-area: passwordText;
+}
