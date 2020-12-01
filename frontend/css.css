@@ -23,6 +23,7 @@ main{
     border-right: 1px solid black;
     min-height: 500px;
 }
+
 /*Scrollar åt fel håll(:*/
 article{
     background-color: palegreen;
@@ -31,6 +32,7 @@ article{
     /*white-space: nowrap;*/
 }
 
+/*Poster element */
 section{
     display: inline-block;
     box-sizing: border-box;
@@ -50,6 +52,7 @@ h2{
     margin: 0;
 }
 
+/*Nav form*/
 nav>form>fieldset{
     display: grid;
     grid-template-areas: 
@@ -69,6 +72,7 @@ nav>form{
     grid-area: search;
 }
 
+/*Logo / Cart*/
 nav>img{
     display: block;
     margin: auto;
@@ -76,12 +80,14 @@ nav>img{
     width: auto;
 }
 
+/*Log in / Create Account*/
 main>form{
     box-sizing: border-box;
     border: 1px solid black;
     margin-top: 10px;
 }
 
+/*Log in*/
 main>form:first-of-type>fieldset{
     display: grid;
     grid-template-areas:
@@ -92,22 +98,37 @@ main>form:first-of-type>fieldset{
         "none submit";
 }
 
+/*Create Account*/
+main>form:last-of-type>fieldset{
+    display: grid;
+    grid-template-rows: auto;
+}
+
+main>form:last-of-type>fieldset>input[type="text"], main>form:last-of-type>fieldset>input[type="password"]{
+    width: 100%;
+}
+
+/*Textfield*/
 main>form>fieldset:first-of-type>input[type="text"]{
     grid-area: text;
 }
 
+/*Textfield-Password*/
 main>form>fieldset:first-of-type>input[type="password"]{
     grid-area: password;
 }
 
+/*Submit button*/
 main>form>fieldset:first-of-type>input[type="submit"]{
     grid-area: submit;
 }
 
+/*Usernamne label */
 main>form>fieldset>label:first-of-type{
     grid-area: nameText;
 }
 
+/*Password label*/
 main>form>fieldset>label:last-of-type{
     grid-area: passwordText;
 }
