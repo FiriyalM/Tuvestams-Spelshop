@@ -46,13 +46,14 @@ footer{
     grid-area: footer;
     background-color: orangered;
     min-height: 100px;
+    padding: 15px;
 }
 
 h2{
     margin: 0;
 }
 
-/*Nav form*/
+/*Search bar*/
 nav>form>fieldset{
     display: grid;
     grid-template-areas: 
@@ -60,14 +61,12 @@ nav>form>fieldset{
     border: none;
 }
 
+/*Search bar button*/
 fieldset>input{
     height: 50px;
 }
 
-form{
-    width: 100%;
-}
-
+/*Search bar form*/
 nav>form{
     grid-area: search;
 }
@@ -84,51 +83,62 @@ nav>img{
 main>form{
     box-sizing: border-box;
     border: 1px solid black;
-    margin-top: 10px;
+    padding-top: 15px;
 }
 
-/*Log in*/
-main>form:first-of-type>fieldset{
-    display: grid;
-    grid-template-areas:
-        "nameText nameText"
-        "text text"
-        "passwordText passwordText"
-        "password password"
-        "none submit";
-}
-
-/*Create Account*/
-main>form:last-of-type>fieldset{
+main>form>fieldset{
     display: grid;
     grid-template-rows: auto;
+    border: none;
 }
 
-main>form:last-of-type>fieldset>input[type="text"], main>form:last-of-type>fieldset>input[type="password"]{
-    width: 100%;
+main>form>fieldset>input[type="submit"]{
+    margin-top: 15px;
 }
 
-/*Textfield*/
-main>form>fieldset:first-of-type>input[type="text"]{
-    grid-area: text;
+form + form{
+    margin-top: 15px;
 }
+/*End of Log in / Create Account*/
 
-/*Textfield-Password*/
-main>form>fieldset:first-of-type>input[type="password"]{
-    grid-area: password;
-}
+@media (min-width: 768px){
+    main{
+        display: grid;
+        grid-template-columns: 0.3fr 1fr 0.3fr;
+        grid-template-rows: auto;
+        column-gap: 50px;
+        padding: 15px;
+    }
 
-/*Submit button*/
-main>form>fieldset:first-of-type>input[type="submit"]{
-    grid-area: submit;
-}
+    /*Grid location Log in form*/
+    main>form:first-of-type{
+        grid-row: 1;
+    }
 
-/*Usernamne label */
-main>form>fieldset>label:first-of-type{
-    grid-area: nameText;
-}
+    /*Grid location create account form*/
+    main>form:last-of-type{
+        grid-row: 2;
+    }
 
-/*Password label*/
-main>form>fieldset>label:last-of-type{
-    grid-area: passwordText;
+    /*Grid locaiton new games continer*/
+    main>div:first-of-type{
+        grid-row: 1;
+        grid-column: 2;
+    }
+
+    /*Grid location recommended games container*/
+    main>div:last-of-type{
+        grid-row: 2;
+        grid-column: 2;
+    }
+
+    /*Search bar grid*/
+    nav>form>fieldset{
+        grid-template-columns: 0.9fr 0.1fr;
+    }
+
+    /*Poster container*/
+    article{
+        height: 350px;
+    }
 }
