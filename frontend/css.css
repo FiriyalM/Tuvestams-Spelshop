@@ -32,6 +32,13 @@ article{
     /*white-space: nowrap;*/
 }
 
+/*User information - checkout*/
+aside{
+    border: 1px solid black;
+    padding: 15px;
+    margin-bottom: 15px;
+}
+
 /*Poster element */
 section{
     display: inline-block;
@@ -101,13 +108,23 @@ form + form{
 }
 /*End of Log in / Create Account*/
 
-#product article, #checkout article{
+#product article, #checkout article, #search article, #user article{
     display: grid;
     grid-template-rows: auto;
     row-gap: 10px;
     height: auto;
     overflow: visible;
     padding: 15px;
+}
+
+/*Order container*/
+#user article{
+    border: 1px solid black;
+    margin-top: 15px;
+}
+/*Order container*/
+#user article:last-of-type{
+    margin-bottom: 15px;
 }
 
 #product section{
@@ -121,12 +138,12 @@ form + form{
 }
 
 /*product container*/
-#checkout section{
+#checkout section, #search section, #user section{
     display: grid;
     grid-template-areas:
         "img title title"
         "img price price"
-        "none none remove";
+        "none none button";
     grid-template-columns: 0.4fr 0.3fr 0.3fr;
     grid-template-rows: 50px 35px 35px;
     gap: 15px;
@@ -135,7 +152,7 @@ form + form{
 }
 
 /*game image*/
-#checkout section>img{
+#checkout section>img, #search section>img, #user section>img{
     grid-area: img;
     width: 100px;
     height: auto;
@@ -143,7 +160,7 @@ form + form{
 }
 
 /*title*/
-#checkout h2:first-of-type{
+#checkout h2:first-of-type, #search h2:first-of-type, #user h2:first-of-type{
     grid-area: title;
     display: block;
     margin-left: 15px;
@@ -151,19 +168,24 @@ form + form{
 }
 
 /*price*/
-#checkout h2:last-of-type{
+#checkout h2:last-of-type, #search h2:last-of-type, #user h2:last-of-type{
     grid-area: price;
     display: inline;
     text-align: center;
 }
 
 /*remove button*/
-#checkout button{
-    grid-area: remove;
+#checkout button, #search button, #user button{
+    grid-area: button;
     width: 80%;
     height: 100%;
     margin-bottom: 15px;
     margin: auto;
+}
+
+/*User info container*/
+#checkout aside{
+    margin: none;
 }
 
 
@@ -217,5 +239,29 @@ form + form{
     /*add button*/
     #product button{
         width: 100px;
+    }
+
+    /*User page grid*/
+    #user main{
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 80vh;
+    }
+
+    /*Orders container*/
+    #user div{
+        grid-row: 1;
+        grid-column: 1;
+        overflow: auto;
+    }
+
+    #user article:first-of-type{
+        margin-top: 0;
+    }
+
+    /*Edit account*/
+    #user form{
+        grid-row: 1;
+        grid-column: 2;
     }
 }
