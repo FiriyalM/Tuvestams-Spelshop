@@ -1,0 +1,8 @@
+com\te4\backend\filters\CORSFilter.class
+com\te4\user\UserBean.class
+com\te4\backend\ConnectionFactory.class
+com\te4\backend\resources\JavaEE8Resource.class
+com\te4\user\User.class
+com\te4\backend\JAXRSConfiguration.class
+com\te4\user\UserInfo.class
+com\te4\user\UserResource.class
