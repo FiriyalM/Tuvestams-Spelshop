@@ -20,6 +20,7 @@ import java.util.Base64;
  */
 @Stateless
 public class UserBean {
+    /**/
     public User createUser(String auth){
         auth = auth.substring(6).trim();
         byte[] bytes = Base64.getDecoder().decode(auth);
@@ -30,6 +31,10 @@ public class UserBean {
         return new User(userName, password);
     }
     
+    /**
+     * den roppars när man gör en fetch från http://localhost:8080/Backend/resources/user , Method GET 
+     * metoden kollar om userName och password fins i databasen.
+     * */
     public boolean logInUser(User user){
         try (Connection con = ConnectionFactory.getConnection()){
             String sql = "SELECT * FROM user WHERE userName=?";
@@ -48,6 +53,10 @@ public class UserBean {
         }
     }
     
+    /**
+     * den roppars när man gör en fetch från http://localhost:8080/Backend/resources/user , Method POST 
+     * metoden sparar anvädndare information
+     * */
     public int saveUser(User user, UserInfo userInfo){
        try (Connection con = ConnectionFactory.getConnection()){
            String hashedpassword = BCrypt.withDefaults().hashToString(12, user.getPassword().toCharArray());
@@ -71,6 +80,10 @@ public class UserBean {
        }
    }
     
+    /**
+     * den roppars när man gör en fetch från http://localhost:8080/Backend/resources/user , Method DELETE 
+     * metoden tarbort användare med hjälp av userName
+     * */
    public int deleteUser(User user){
        try (Connection con = ConnectionFactory.getConnection()){
            String deleteUser = String.format("DELETE FROM user WHERE userName = ('%s')", user.getUserName());
@@ -83,6 +96,10 @@ public class UserBean {
        }
     }
    
+   /**
+    * den roppars när man gör en fetch från http://localhost:8080/Backend/resources/user , Method PUT 
+    * metoden ändrar på användarens lösenord 
+    * */
    public int changepassword(User user){
        try (Connection con = ConnectionFactory.getConnection()){
             String hashedpassword = BCrypt.withDefaults().hashToString(12, user.getPassword().toCharArray());
@@ -96,6 +113,10 @@ public class UserBean {
        }
    }
    
+   /**
+   * den roppars när man gör en fetch från http://localhost:8080/Backend/resources/user/updateUser , Method PUT 
+   * metoden ändrar på användarens information med hjälp av userName och password
+    * */
    public int changeUserData(User user, UserInfo userInfo){
        try (Connection con = ConnectionFactory.getConnection()){
            String hashedpassword = BCrypt.withDefaults().hashToString(12, user.getPassword().toCharArray());
@@ -121,5 +142,25 @@ public class UserBean {
            System.out.println("Error CredentialBean.saveCredential: " +e.getMessage());
            return 0;
        }
+   }
+  
+   /*
+   * den roppars när man gör en fetch från http://localhost:8080/Backend/resources/user/searchUser , Method GET 
+   * den hämtar alla användarens införmation när admin söker efter en användare på sin userName
+   */
+   public int searchUser(User user, UserInfo userInfo){
+       try (Connection con = ConnectionFactory.getConnection()){
+            String sql = "SELECT * FROM user WHERE userName=?";
+            String sql2 = "SELECT * FROM userInfo WHERE userName=?";
+            PreparedStatement stmt = con.prepareStatement(sql2);
+            stmt.setString(1, user.getUserName());
+            ResultSet data = stmt.executeQuery();
+            while(data.next()){
+                System.out.println(userInfo.getEmail());
+            }
+            return 1;
+        } catch (Exception e) {
+            return 0;
+}
    }
 }
