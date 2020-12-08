@@ -18,16 +18,6 @@ public class UserInfo {
     private int zipCode;
     private String phoneNumber;
 
-    public UserInfo(int customerNumber, String userName, String email, String adress, String city, int zipCode, String phoneNumber) {
-        this.customerNumber = customerNumber;
-        this.userName = userName;
-        this.email = email;
-        this.address = adress;
-        this.city = city;
-        this.zipCode = zipCode;
-        this.phoneNumber = phoneNumber;
-    }
-
     public UserInfo(String userName, String email, String adress, String city, int zipCode, String phoneNumber) {
         this.userName = userName;
         this.email = email;
@@ -37,8 +27,6 @@ public class UserInfo {
         this.phoneNumber = phoneNumber;
     }
 
-      
-    
     public int getCustomerNumber() {
         return customerNumber;
     }

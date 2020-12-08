@@ -27,6 +27,10 @@ public class UserResource {
     @EJB
     UserBean userBean;
     
+    /**
+     * med denn metoden loggar man in 
+     * den får informationen på detta viset {"userName":"användarens namn","password":"KRYPTERAD lösenordet"}
+     * */
     @GET
     public Response logInUser(@HeaderParam("Authorization") String userData){
         User user = userBean.createUser(userData);
@@ -37,6 +41,17 @@ public class UserResource {
         }
      }
     
+    /**
+     * denna metoden skapar ny användare.
+     *  den får informationen på detta viset 
+     * {"userName":"användarens namn",
+     * "password":"KRYPTERAD lösenordet",
+     * "email":"sin Email",
+     * "phoneNumber":"mobil nummer",
+     * "address":"address",
+     * "zipCode":"post nummer",
+     * "city":"ort"}
+     * */
     @POST
     @Consumes(MediaType.TEXT_PLAIN)
     public Response createUser(String userData){
@@ -51,6 +66,10 @@ public class UserResource {
     }
     
     
+    /**
+     * användaren ändrar sitt lösenord med hjälp av denna metoden. 
+     * den får informationen på detta viset {"userName":"användarens namn","password":"KRYPTERAD lösenordet"}
+     */
     @PUT
     @Consumes(MediaType.TEXT_PLAIN)
     public Response changePassword(String userData){
@@ -63,6 +82,17 @@ public class UserResource {
         }
     }
     
+    /**
+     * användaren kan ändra alla sina uppgifter med hjälp av denna metoden. 
+     * den får informationen på detta viset 
+     * {"userName":"användarens namn",
+     * "password":"KRYPTERAD lösenordet",
+     * "email":"sin Email",
+     * "phoneNumber":"mobil nummer",
+     * "address":"address",
+     * "zipCode":"post nummer",
+     * "city":"ort"}
+     * */
     @PUT
     @Path("updateUser")
     @Consumes(MediaType.TEXT_PLAIN)
@@ -77,6 +107,10 @@ public class UserResource {
         }
     }
     
+    /**
+     * denna metoden tarbort användaren.
+     * den får bara anvädarens namn {"userName":"användarens namn"}
+     * */
     @DELETE
     public Response deleteUser(@HeaderParam("user") String userName){;
         Gson gson = new Gson();
@@ -88,10 +122,21 @@ public class UserResource {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
     }
-    
-    /*
+    /**
+     * med denna metoden söker admin efter användaren med hjälp av användarens namn.
+     * den får bara anvädarens namn {"userName":"användarens namn"}
+     * */
     @GET
+    @Path("searchUser")
     @Consumes(MediaType.TEXT_PLAIN)
-    public Response searchUser(){}
-    */
+    public Response searchUser(@HeaderParam("user") String userName){
+        Gson gson = new Gson();
+        User user = gson.fromJson(userName, User.class);
+        UserInfo userInfo = gson.fromJson(userName, UserInfo.class);
+        if(userBean.searchUser(user, userInfo) == 1){
+           return Response.ok().build();
+        }else{
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+    }
 }
