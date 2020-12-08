@@ -81,7 +81,7 @@ nav>form{
 }
 
 /*Logo / Cart*/
-nav>img{
+nav>a>img{
     display: block;
     margin: auto;
     height: 60px;
