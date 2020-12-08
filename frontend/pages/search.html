@@ -43,37 +43,42 @@
             </section>
         </article>
 
-        <form><!--Log in form-->
+        <form id="logIn"><!--Log in form-->
             <fieldset>
                 <legend>Logga in</legend>
                 <label>Användarnamn</label>
-                <input type="text">
+                <input type="text" name="username">
                 <label>Lösenord</label>
-                <input type="password">
+                <input type="password" name="password">
                 <input type="submit" value="Logga in">
             </fieldset>
         </form>
 
-        <form><!--Create account form-->
+        <form id="createAcc"><!--Create account form-->
             <fieldset>
                 <legend>Skapa konto</legend>
                 <label>Användarnamn</label>
-                <input type="text">
+                <input type="text" name="username">
                 <label>Lösenord</label>
-                <input type="password">
+                <input type="password" name="password">
                 <label>Mail</label>
-                <input type="text">
-                <label>Adress</label>
-                <input type="text">
-                <label>Stad</label>
-                <input type="text">
-                <label>Postnummer</label>
-                <input type="text">
+                <input type="text" name="email">
                 <label>Telefonnummer</label>
-                <input type="text">
+                <input type="text" name="phone">
+                <label>Adress</label>
+                <input type="text" name="address">
+                <label>Postnummer</label>
+                <input type="text" name="zip">
+                <label>Stad</label>
+                <input type="text" name="city">
                 <input type="submit" value="Skapa konto">
             </fieldset>
         </form>
+
+        <section id="logOut">
+            <h3>namn</h3>
+            <button>Logga Ut</button>
+        </section>
     </main>
     <footer>
         <p>Kontakta Oss:</p>
