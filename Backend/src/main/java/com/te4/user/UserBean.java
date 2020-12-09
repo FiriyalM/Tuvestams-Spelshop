@@ -75,7 +75,7 @@ public class UserBean {
            return rows;
 
        } catch (Exception e) {
-           System.out.println("Error CredentialBean.saveCredential: " +e.getMessage());
+           System.out.println("Error UserBean.saveUser: " +e.getMessage());
            return 0;
        }
    }
@@ -91,7 +91,7 @@ public class UserBean {
            int rows = pstmt.executeUpdate(deleteUser);
            return rows;
        } catch (Exception e) {
-           System.out.println("Error CredentialBean.saveCredential: " +e.getMessage());
+           System.out.println("Error UserBean.deleteUser: " +e.getMessage());
            return 0;
        }
     }
@@ -108,7 +108,7 @@ public class UserBean {
            int rows = pstmt.executeUpdate(deleteUser);
            return rows;
        } catch (Exception e) {
-           System.out.println("Error CredentialBean.saveCredential: " +e.getMessage());
+           System.out.println("Error UserBean.changepassword: " +e.getMessage());
            return 0;
        }
    }
@@ -139,7 +139,7 @@ public class UserBean {
            rows += stmt.executeUpdate(updateUserInfo);
            return rows;
        } catch (Exception e) {
-           System.out.println("Error CredentialBean.saveCredential: " +e.getMessage());
+           System.out.println("Error UserBean.changeUserData: " +e.getMessage());
            return 0;
        }
    }
@@ -161,6 +161,6 @@ public class UserBean {
             return 1;
         } catch (Exception e) {
             return 0;
-}
+        }
    }
 }
