@@ -10,12 +10,31 @@ package com.te4.product;
  * @author Elev
  */
 public class Product {
+    private int productId;
     private String productName;
     private String consoleType;
     private String info;
     private String imagePath;
     private String price;
     private int amountInStock;
+
+    public Product(int productId, String productName, String consoleType, String info, String imagePath, String price, int amountInStock) {
+        this.productId = productId;
+        this.productName = productName;
+        this.consoleType = consoleType;
+        this.info = info;
+        this.imagePath = imagePath;
+        this.price = price;
+        this.amountInStock = amountInStock;
+    }
+
+    public int getProductId() {
+        return productId;
+    }
+
+    public void setProductId(int productId) {
+        this.productId = productId;
+    }
 
     public String getProductName() {
         return productName;
