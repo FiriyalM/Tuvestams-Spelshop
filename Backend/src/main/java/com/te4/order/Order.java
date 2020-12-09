@@ -18,11 +18,19 @@ public class Order {
     private int amountPurchased;
     private String purchaseDate;
 
-    public int getUserName() {
+    public Order(int customerNumber, int orderId, int productId, int amountPurchased, String purchaseDate) {
+        this.customerNumber = customerNumber;
+        this.orderId = orderId;
+        this.productId = productId;
+        this.amountPurchased = amountPurchased;
+        this.purchaseDate = purchaseDate;
+    }
+
+    public int getCustomerNumber() {
         return customerNumber;
     }
 
-    public void setUserName(int userName) {
+    public void setCustomerNumber(int userName) {
         this.customerNumber = userName;
     }
 
