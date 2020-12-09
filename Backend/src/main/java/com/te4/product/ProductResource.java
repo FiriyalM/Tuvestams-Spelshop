@@ -73,7 +73,7 @@ public class ProductResource {
     }
     
     /**
-     * med den här metoden skapar en ny product
+     * den här metoden skapar en ny product
      * den tar emot införmationen på detta viset 
      *      {"productName":"Minecraft",
      *      "consoleType":"PC",
@@ -95,7 +95,7 @@ public class ProductResource {
     }
     
     /**
-     * med den här metoden skapar en ny product
+     * med den här metoden tar bort en product
      * den tar emot införmationen på detta viset 
      *      {"productId":"3"}
      * */

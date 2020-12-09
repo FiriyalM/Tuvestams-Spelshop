@@ -50,9 +50,6 @@ public class ProductBean {
         try (Connection con = ConnectionFactory.getConnection()){
            String deleteProductData = "DELETE FROM `product` WHERE productId=?";
            PreparedStatement pstmt = con.prepareStatement(deleteProductData);
-            System.out.println(product.getProductId());
-            System.out.println(product.getProductName());
-            System.out.println(product.getInfo());
            pstmt.setInt(1, product.getProductId());
            int rows = pstmt.executeUpdate();
            return rows;
