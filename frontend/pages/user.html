@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="../css/css.css">
+    <script src="../scripts/script.js"></script>
 </head>
 <body id="user">
     <nav>
@@ -89,24 +90,24 @@
             </article>
         </div>
 
-        <form id="updateAcc"><!--Create account form-->
+        <form id="updateAcc" method="POST"><!--Create account form-->
             <fieldset>
                 <legend>Ändra konto</legend>
-                <label>Användarnamn</label>
-                <input type="text" name="username">
-                <label>Lösenord</label>
-                <input type="password" name="password">
-                <label>Mail</label>
-                <input type="text" name="email">
-                <label>Telefonnummer</label>
-                <input type="text" name="phone">
-                <label>Adress</label>
-                <input type="text" name="address">
-                <label>Postnummer</label>
-                <input type="text" name="zip">
-                <label>Stad</label>
-                <input type="text" name="city">
-                <input type="submit" value="Uppdatera">
+                <label for="createAccUserName">Användarnamn</label>
+                <input type="text" name="userName" id="userName">
+                <label for="createAccPassword">Lösenord</label>
+                <input type="password" name="password" id="password">
+                <label for="createAccEmail">Mail</label>
+                <input type="email" name="email" id="email">
+                <label for="createAccPhone">Telefonnummer</label>
+                <input type="text" name="phone" id="phone">
+                <label for="createAccAddress">Adress</label>
+                <input type="text" name="address" id="address">
+                <label for="createAccZip">Postnummer</label>
+                <input type="text" name="zip" id="zip">
+                <label for="createAccCity">Stad</label>
+                <input type="text" name="city" id="city">
+                <input type="submit" value="Skapa konto">
             </fieldset>
         </form>
     </main>

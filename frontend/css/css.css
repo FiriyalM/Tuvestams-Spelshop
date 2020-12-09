@@ -283,6 +283,7 @@ form + form{
         grid-template-rows: none;
         column-gap: 50px;
         padding: 15px;
+        width: 100%;
     }
 
     /*Grid location Log in form*/
@@ -315,7 +316,7 @@ form + form{
     /*Poster container*/
     #index article{
         height: 350px;
-        width: 60vw;
+        width: 55vw;
     }
 
     /*Posters*/
@@ -348,6 +349,7 @@ form + form{
         display: grid;
         grid-template-columns: 1fr 1fr;
         grid-template-rows: 80vh;
+        width: 100%;
     }
 
     /*Orders container*/
@@ -371,6 +373,7 @@ form + form{
     #admin main{
         grid-template-columns: 1fr 1fr 1fr;
         column-gap: 15px;
+        width: 100%;
     }
 
     /*Admin article title*/

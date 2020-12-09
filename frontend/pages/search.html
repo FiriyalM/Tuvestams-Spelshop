@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="../css/css.css">
+    <script src="../scripts/script.js"></script>
 </head>
 <body id="search">
     <nav>
@@ -43,34 +44,34 @@
             </section>
         </article>
 
-        <form id="logIn"><!--Log in form-->
+        <form id="logIn" method="POST"><!--Log in form-->
             <fieldset>
                 <legend>Logga in</legend>
-                <label>Användarnamn</label>
-                <input type="text" name="username">
-                <label>Lösenord</label>
-                <input type="password" name="password">
+                <label for="logInUserName">Användarnamn</label>
+                <input type="text" name="userName" id="logInUserName">
+                <label for="logInPassword">Lösenord</label>
+                <input type="password" name="password" id="logInPassword">
                 <input type="submit" value="Logga in">
             </fieldset>
         </form>
 
-        <form id="createAcc"><!--Create account form-->
+        <form id="createAcc" method="POST"><!--Create account form-->
             <fieldset>
                 <legend>Skapa konto</legend>
-                <label>Användarnamn</label>
-                <input type="text" name="username">
-                <label>Lösenord</label>
-                <input type="password" name="password">
-                <label>Mail</label>
-                <input type="text" name="email">
-                <label>Telefonnummer</label>
-                <input type="text" name="phone">
-                <label>Adress</label>
-                <input type="text" name="address">
-                <label>Postnummer</label>
-                <input type="text" name="zip">
-                <label>Stad</label>
-                <input type="text" name="city">
+                <label for="createAccUserName">Användarnamn</label>
+                <input type="text" name="userName" id="createAccUserName">
+                <label for="createAccPassword">Lösenord</label>
+                <input type="password" name="password" id="createAccPassword">
+                <label for="createAccEmail">Mail</label>
+                <input type="email" name="email" id="createAccEmail">
+                <label for="createAccPhone">Telefonnummer</label>
+                <input type="text" name="phone" id="createAccPhone">
+                <label for="createAccAddress">Adress</label>
+                <input type="text" name="address" id="createAccAddress">
+                <label for="createAccZip">Postnummer</label>
+                <input type="text" name="zip" id="createAccZip">
+                <label for="createAccCity">Stad</label>
+                <input type="text" name="city" id="createAccCity">
                 <input type="submit" value="Skapa konto">
             </fieldset>
         </form>
