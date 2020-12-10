@@ -1,3 +1,4 @@
+/*Jesper Jensen*/
 var logInForm; //Reference to log in form
 var createAccForm; //Reference to create account form
 var updateAccForm; //Referece to update account form - user page
@@ -7,18 +8,19 @@ window.onload = init;
 
 function init(){
     //All pages that has logIn/Create Account form
-    if(document.querySelector("body").getAttribute("id") === "index" || document.querySelector("body").getAttribute("id") === "search" || document.querySelector("body").getAttribute("id") === "checkout"){
+    if(document.querySelector("body").getAttribute("id") === "index" || document.querySelector("body").getAttribute("id") === "search" || document.querySelector("body").getAttribute("id") === "product"){
         if(sessionStorage.getItem("userName") !== null){  //If logged in, hide log in / create account forms
             document.getElementById("logIn").style.display = "none";  //Hide log in
             document.getElementById("createAcc").style.display = "none";  //Hide create account
-            document.getElementById("logOut").style.display = "initial";  //show log out
+            document.getElementById("logOut").style.display = "inherit";  //show log out
     
             updateName(sessionStorage.getItem("userName"));  //Set shown name to logged in user
     
-            document.getElementById("logOut").querySelector("button").onclick = logOut;
+            document.getElementById("userPageButton").onclick = goToUser;
+            document.getElementById("logOutButton").onclick = logOut;
         }else{  //Else show the forms
-            document.getElementById("logIn").style.display = "initial";  //show log in
-            document.getElementById("createAcc").style.display = "initial";  //show create account
+            document.getElementById("logIn").style.display = "inherit";  //show log in
+            document.getElementById("createAcc").style.display = "inherit";  //show create account
             document.getElementById("logOut").style.display = "none";  // hide log out
         }
        
@@ -39,6 +41,14 @@ function init(){
         updateAccForm.addEventListener("submit", updateAccount);
 
         updateAccForm.addEventListener("keyup", checkFields);
+    }
+}
+
+function goToUser(){
+    if(document.querySelector("body").getAttribute("id") === "index"){
+        location.replace("./pages/user.html");
+    }else{
+        location.replace("./user.html");
     }
 }
 
@@ -139,6 +149,10 @@ function createAccount(){
     });
 }
 
+/**
+ * Takes the input data from the form and fills in the blanks "" where there is no input with
+ * the old information and sends it to the database
+ */
 function updateAccount(){
     let name = updateAccForm.username.value;
     let pass = updateAccForm.password.value;
@@ -179,6 +193,23 @@ function updateAccount(){
     });
 }
 
+/**
+ * Gets the logged in users information from the database and saves it in userInfo.
+ * 
+ * Username
+ * 
+ * Password
+ * 
+ * Email
+ * 
+ * Phone
+ * 
+ * Address
+ * 
+ * Zip Code
+ * 
+ * City
+ */
 function getUserInformation(){
     fetch("http://localhost:8080/Backend/resources/user", {
         method: "GET",
@@ -186,7 +217,7 @@ function getUserInformation(){
         headers: {
             'Content-Type': 'text/plain'
         },
-        body: encrypted
+        body: sessionStorage.getItem("userName")
         }).then((response) => {
             return response.json();
         }).then(data => {
@@ -218,18 +249,33 @@ function checkFields(){
     window["check" + functionName](target);  //Calls the function check + input name that begins with upp case for example check + Phone 
 }
 
+/**
+ * Tests user name with regex and changes style accordingly
+ * 
+ * @param {*} target 
+ */
 function checkUserName(target){
-    let reg = /\d/;
+    let reg = /\w/;
 
     testRegex(reg, target.value, target.style); //Tests the regex and changes style acordingly
 }
 
+/**
+ * Tests password with regex and changes style accordingly
+ * 
+ * @param {*} target 
+ */
 function checkPassword(target){
     let reg = /^.+$/;
 
     testRegex(reg, target.value, target.style); //Tests the regex and changes style acordingly
 }
 
+/**
+ * Tests email with regex and changes style accordingly
+ * 
+ * @param {*} target 
+ */
 function checkEmail(target){
     let reg = /^.+[@].+[.].+$/;
 
@@ -238,12 +284,22 @@ function checkEmail(target){
     testRegex(reg, cleanedInput, target.style); //Tests the regex and changes style acordingly
 }
 
+/**
+ * Tests phone with regex and changes style accordingly
+ * 
+ * @param {*} target 
+ */
 function checkPhone(target){
     let reg = /\d/;
 
     testRegex(reg, target.value, target.style); //Tests the regex and changes style acordingly
 }
 
+/**
+ * Tests address with regex and changes style accordingly
+ * 
+ * @param {*} target 
+ */
 function checkAddress(target){
     let reg = /^\D+\d+.$/; //Regex
 
@@ -252,6 +308,11 @@ function checkAddress(target){
     testRegex(reg, cleanedInput, target.style); //Tests the regex and changes style acordingly
 }
 
+/**
+ * Tests zip code with regex and changes style accordingly
+ * 
+ * @param {*} target 
+ */
 function checkZip(target){
     let reg = /^\d{5}$/;  //Regex
 
@@ -260,6 +321,11 @@ function checkZip(target){
     testRegex(reg, cleanedInput, target.style); //Tests the regex and changes style acordingly
 }
 
+/**
+ * Tests city with regex and changes style accordingly
+ * 
+ * @param {*} target 
+ */
 function checkCity(target){
     let reg = /^[a-zA-Z]+$/; //Regex 
 
@@ -268,6 +334,18 @@ function checkCity(target){
     testRegex(reg, cleanedInput, target.style); //Tests the regex and changes style acordingly
 }
 
+/**
+ * Takes the regualar expression (regex), the value from the input field and the style of the input
+ * and tests the value and changes background color if depending on the result. 
+ * 
+ * Red = invalid
+ * 
+ * White = valid
+ * 
+ * @param {*} reg 
+ * @param {*} input 
+ * @param {*} css 
+ */
 function testRegex(reg, input, css){
     if(!reg.test(input)){  //If the input doesn't match regex
         css.backgroundColor = "red";  //Show red background
