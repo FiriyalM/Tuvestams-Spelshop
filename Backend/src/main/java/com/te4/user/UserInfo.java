@@ -7,7 +7,7 @@ package com.te4.user;
 
 /**
  *
- * @author Elev
+ * @author Mohame Nader Alhamwi
  */
 public class UserInfo {
     private int customerNumber;

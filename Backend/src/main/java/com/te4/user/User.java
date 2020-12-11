@@ -7,7 +7,7 @@ package com.te4.user;
 
 /**
  *
- * @author Elev
+ * @author Mohame Nader Alhamwi
  */
 public class User {
     private String userName;
@@ -24,8 +24,6 @@ public class User {
         this.password = password;
         this.adminStatus = adminStatus;
     }
-    
-    
     
     public String getUserName() {
         return userName;

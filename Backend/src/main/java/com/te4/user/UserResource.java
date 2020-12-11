@@ -19,7 +19,7 @@ import javax.ws.rs.core.Response;
 
 /**
  *
- * @author Elev
+ * @author Mohame Nader Alhamwi
  */
 @Path("user")
 public class UserResource {
@@ -33,7 +33,9 @@ public class UserResource {
      * */
     @GET
     public Response logInUser(@HeaderParam("Authorization") String userData){
+        
         User user = userBean.createUser(userData);
+        
         if(userBean.logInUser(user)){
             return Response.ok("Welcome to our sectrer res api").build();
         }else{
@@ -55,16 +57,17 @@ public class UserResource {
     @POST
     @Consumes(MediaType.TEXT_PLAIN)
     public Response createUser(String userData){
+        
         Gson gson = new Gson();
         User user = gson.fromJson(userData, User.class);
         UserInfo userInfo = gson.fromJson(userData, UserInfo.class);
+        
         if(userBean.saveUser(user, userInfo) == 2){
            return Response.ok().header("Access-Control-Allow-Origin","*").build();
         }else{
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
     }
-    
     
     /**
      * användaren ändrar sitt lösenord med hjälp av denna metoden. 
@@ -73,8 +76,10 @@ public class UserResource {
     @PUT
     @Consumes(MediaType.TEXT_PLAIN)
     public Response changePassword(String userData){
+        
         Gson gson = new Gson();
         User user = gson.fromJson(userData, User.class);
+        
         if(userBean.changepassword(user) == 1){
            return Response.ok().header("Access-Control-Allow-Origin","*").build();
         }else{
@@ -97,9 +102,11 @@ public class UserResource {
     @Path("updateUser")
     @Consumes(MediaType.TEXT_PLAIN)
     public Response changeUserData(String userData){
+        
         Gson gson = new Gson();
         User user = gson.fromJson(userData, User.class);
         UserInfo userInfo = gson.fromJson(userData, UserInfo.class);
+        
         if(userBean.changeUserData(user, userInfo) == 2){
            return Response.ok().header("Access-Control-Allow-Origin","*").build();
         }else{
@@ -112,27 +119,30 @@ public class UserResource {
      * den får bara anvädarens namn {"userName":"användarens namn"}
      * */
     @DELETE
-    public Response deleteUser(@HeaderParam("user") String userName){;
+    public Response deleteUser(@HeaderParam("user") String userName){
+    
         Gson gson = new Gson();
         User user = gson.fromJson(userName, User.class);
+        
         if(userBean.deleteUser(user) == 1){
            return Response.ok().build();
         }else{
-            
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
     }
     /**
      * med denna metoden söker admin efter användaren med hjälp av användarens namn.
-     * den får bara anvädarens namn {"userName":"användarens namn"}
+     * den får bara anvädarens namn {"userName":"användarens namn"} 
      * */
     @GET
     @Path("searchUser")
     @Consumes(MediaType.TEXT_PLAIN)
     public Response searchUser(@HeaderParam("user") String userName){
+        
         Gson gson = new Gson();
         User user = gson.fromJson(userName, User.class);
         UserInfo userInfo = gson.fromJson(userName, UserInfo.class);
+        
         if(userBean.searchUser(user, userInfo) == 1){
            return Response.ok().build();
         }else{

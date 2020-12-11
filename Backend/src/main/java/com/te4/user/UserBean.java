@@ -16,7 +16,7 @@ import java.util.Base64;
 
 /**
  *
- * @author Elev
+ * @author Mohame Nader Alhamwi
  */
 @Stateless
 public class UserBean {
@@ -37,17 +37,22 @@ public class UserBean {
      * */
     public boolean logInUser(User user){
         try (Connection con = ConnectionFactory.getConnection()){
+            
             String sql = "SELECT * FROM user WHERE userName=?";
+            
             PreparedStatement stmt = con.prepareStatement(sql);
             stmt.setString(1, user.getUserName());
             ResultSet data = stmt.executeQuery();
+            
             if(data.next()){
                 String bcryptHashString = data.getString("password");
                 BCrypt.Result result = BCrypt.verifyer().verify(user.getPassword().toCharArray(), bcryptHashString);
+                
                 return result.verified;
             }else{
                 return false;
             }
+            
         } catch (Exception e) {
             return false;
         }
@@ -59,7 +64,9 @@ public class UserBean {
      * */
     public int saveUser(User user, UserInfo userInfo){
        try (Connection con = ConnectionFactory.getConnection()){
+           
            String hashedpassword = BCrypt.withDefaults().hashToString(12, user.getPassword().toCharArray());
+           
            String insertUser = String.format("INSERT INTO user VALUES ('%s','%s', '%s');", user.getUserName(), hashedpassword, 0);
            String insertUserInfo = String.format("INSERT INTO userinfo(userName, email, phoneNumber, address, zipCode, city) "
                    + "VALUES ('%s','%s', '%s', '%s', '%d','%s');",
@@ -69,11 +76,11 @@ public class UserBean {
                    userInfo.getAddress(), 
                    userInfo.getZipCode(), 
                    userInfo.getCity() );
+           
            PreparedStatement stmt = con.prepareStatement(insertUser + insertUserInfo);
            int rows = stmt.executeUpdate(insertUser);
            rows += stmt.executeUpdate(insertUserInfo);
            return rows;
-
        } catch (Exception e) {
            System.out.println("Error UserBean.saveUser: " +e.getMessage());
            return 0;
@@ -86,7 +93,9 @@ public class UserBean {
      * */
    public int deleteUser(User user){
        try (Connection con = ConnectionFactory.getConnection()){
+           
            String deleteUser = String.format("DELETE FROM user WHERE userName = ('%s')", user.getUserName());
+           
            PreparedStatement pstmt = con.prepareStatement(deleteUser);
            int rows = pstmt.executeUpdate(deleteUser);
            return rows;
@@ -102,9 +111,13 @@ public class UserBean {
     * */
    public int changepassword(User user){
        try (Connection con = ConnectionFactory.getConnection()){
-            String hashedpassword = BCrypt.withDefaults().hashToString(12, user.getPassword().toCharArray());
+           
+           String hashedpassword = BCrypt.withDefaults().hashToString(12, user.getPassword().toCharArray());
+            
            String deleteUser = String.format("UPDATE user SET password='%s' WHERE userName='%s'",hashedpassword, user.getUserName() );
+           
            PreparedStatement pstmt = con.prepareStatement(deleteUser);
+           
            int rows = pstmt.executeUpdate(deleteUser);
            return rows;
        } catch (Exception e) {
@@ -119,12 +132,15 @@ public class UserBean {
     * */
    public int changeUserData(User user, UserInfo userInfo){
        try (Connection con = ConnectionFactory.getConnection()){
+           
            String hashedpassword = BCrypt.withDefaults().hashToString(12, user.getPassword().toCharArray());
+           
            String uppdateUser = String.format("UPDATE user SET "
                    + "userName='%s', password='%s', adminStatus='%s' WHERE userName='%s';",
                    user.getUserName(), 
                    hashedpassword, 0, 
                    user.getUserName());
+           
            String updateUserInfo = String.format("UPDATE userinfo SET "
                    + "email='%s', phoneNumber='%s', address='%s', zipCode='%d', city='%s'  "
                    + "WHERE userName='%s';", 
@@ -134,6 +150,7 @@ public class UserBean {
                    userInfo.getZipCode(), 
                    userInfo.getCity(), 
                    user.getUserName());
+           
            PreparedStatement stmt = con.prepareStatement(uppdateUser + updateUserInfo);
            int rows = stmt.executeUpdate(uppdateUser);
            rows += stmt.executeUpdate(updateUserInfo);
@@ -150,14 +167,19 @@ public class UserBean {
    */
    public int searchUser(User user, UserInfo userInfo){
        try (Connection con = ConnectionFactory.getConnection()){
+           
             String sql = "SELECT * FROM user WHERE userName=?";
             String sql2 = "SELECT * FROM userInfo WHERE userName=?";
+            
             PreparedStatement stmt = con.prepareStatement(sql2);
             stmt.setString(1, user.getUserName());
             ResultSet data = stmt.executeQuery();
+            
             while(data.next()){
-                System.out.println(userInfo.getEmail());
+                System.out.println(userInfo.getUserName());
+                //visa användarens införmation
             }
+            
             return 1;
         } catch (Exception e) {
             return 0;
