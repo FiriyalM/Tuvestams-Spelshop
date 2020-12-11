@@ -20,22 +20,20 @@ import javax.ws.rs.core.Response;
 
 /**
  *
- * @author Elev
+ * @author Mohame Nader Alhamwi
  */
 @Path("product")
 public class ProductResource {
     
-    
     @EJB
     ProductBean productBean;
-    
     
     /**
      * med den här metoden söker man efter producten med hjälp av consoleType
      * den tar emot införmationen på detta viset {"consoleType":"PC"}
      * */
     @GET
-    @Path("search/ConsoleType")
+    @Path("search/consoleType")
     public Response searchConsoleType(@HeaderParam("ConsoleType")String consoleType){
         Gson gson = new Gson();
         Product product = gson.fromJson(consoleType, Product.class);
@@ -56,7 +54,7 @@ public class ProductResource {
      * den tar emot införmationen på detta viset {"productName":"Minecraft"}
      * */
     @GET
-    @Path("search/ProductName")
+    @Path("search/productName")
     public Response searchProduct(@HeaderParam("productName")String productName){
         Gson gson = new Gson();
         Product product = gson.fromJson(productName, Product.class);
@@ -85,8 +83,10 @@ public class ProductResource {
     @POST
     @Consumes(MediaType.TEXT_PLAIN)
     public Response createProduct(String productData){
+        
         Gson gson = new Gson();
         Product product = gson.fromJson(productData, Product.class);
+        
         if(productBean.addProduct(product) == 1){
            return Response.ok().header("Access-Control-Allow-Origin","*").build();
         }else{
@@ -101,8 +101,10 @@ public class ProductResource {
      * */
     @DELETE
     public Response deleteProduct(@HeaderParam("productId") String productId){
+        
         Gson gson = new Gson();
         Product product = gson.fromJson(productId, Product.class);
+        
         if(productBean.deleteProduct(product) == 1){
            return Response.ok().header("Access-Control-Allow-Origin","*").build();
         }else{
@@ -124,13 +126,14 @@ public class ProductResource {
     @PUT
     @Consumes(MediaType.TEXT_PLAIN)
     public Response updateProduct(String productData){
+        
         Gson gson = new Gson();
         Product product = gson.fromJson(productData, Product.class);
+        
         if(productBean.updateProduct(product) == 1){
            return Response.ok().header("Access-Control-Allow-Origin","*").build();
         }else{
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
     }
-
 }

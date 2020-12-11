@@ -15,7 +15,7 @@ import javax.ejb.Stateless;
 
 /**
  *
- * @author Elev
+ * @author Mohame Nader Alhamwi
  */
 @Stateless
 public class ProductBean {
@@ -25,8 +25,10 @@ public class ProductBean {
      * */
     public int addProduct(Product product){
          try (Connection con = ConnectionFactory.getConnection()){
+             
            String createProduct = "INSERT INTO `product`(`productName`, `consoleType`, `info`, `price`, `imgPath`, `amountInStock`) "
                    + "VALUES (?,?,?,?,?,?)";
+           
            PreparedStatement pstmt = con.prepareStatement(createProduct);
            pstmt.setString(1, product.getProductName());
            pstmt.setString(2,  product.getConsoleType());
@@ -34,6 +36,7 @@ public class ProductBean {
            pstmt.setString(4, product.getPrice());
            pstmt.setString(5, product.getImagePath());
            pstmt.setInt(6, product.getAmountInStock());
+           
            int rows = pstmt.executeUpdate();
            return rows;
        } catch (Exception e) {
@@ -48,7 +51,9 @@ public class ProductBean {
      * */
     public int deleteProduct(Product product){
         try (Connection con = ConnectionFactory.getConnection()){
+            
            String deleteProductData = "DELETE FROM `product` WHERE productId=?";
+           
            PreparedStatement pstmt = con.prepareStatement(deleteProductData);
            pstmt.setInt(1, product.getProductId());
            int rows = pstmt.executeUpdate();
@@ -65,7 +70,9 @@ public class ProductBean {
      * */
     public int updateProduct(Product product){
      try (Connection con = ConnectionFactory.getConnection()){
+         
            String updateProductData = "UPDATE `product` SET `productName`=?,`consoleType`=?,`info`=?,`price`=?,`imgPath`=?,`amountInStock`=? WHERE productId=?";
+           
            PreparedStatement pstmt = con.prepareStatement(updateProductData);
            pstmt.setString(1, product.getProductName());
            pstmt.setString(2, product.getConsoleType());
@@ -74,6 +81,7 @@ public class ProductBean {
            pstmt.setString(5, product.getImagePath());
            pstmt.setInt(6, product.getAmountInStock());
            pstmt.setInt(7, product.getProductId());
+           
            int rows = pstmt.executeUpdate();
            return rows;
        } catch (Exception e) {
@@ -87,12 +95,17 @@ public class ProductBean {
      * metoden söker efter en product med hjälp av productName
      * */
      public List<Product> searchProductByProductName(Product product){
+         
           List<Product> productData = new ArrayList<Product>();
+          
          try (Connection con = ConnectionFactory.getConnection()){
+             
            String createProduct = "SELECT * FROM `product` WHERE productName=?";
+           
             PreparedStatement stmt = con.prepareStatement(createProduct);
             stmt.setString(1, product.getProductName());
             ResultSet data = stmt.executeQuery();
+            
             while(data.next()){
                 int productId = data.getInt("productId");
                 String productName = data.getString("productName");
@@ -118,12 +131,17 @@ public class ProductBean {
      * metoden söker en product med hjälp av consoleType
      * */
     public List<Product> searchProductByConsoleType(Product product){
+        
           List<Product> productData = new ArrayList<Product>();
+          
          try (Connection con = ConnectionFactory.getConnection()){
+             
            String createProduct = "SELECT * FROM `product` WHERE consoleType=?";
+           
             PreparedStatement stmt = con.prepareStatement(createProduct);
             stmt.setString(1, product.getConsoleType());
             ResultSet data = stmt.executeQuery();
+            
             while(data.next()){
                 int productId = data.getInt("productId");
                 String productName = data.getString("productName");

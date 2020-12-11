@@ -7,7 +7,7 @@ package com.te4.product;
 
 /**
  *
- * @author Elev
+ * @author Mohame Nader Alhamwi
  */
 public class Product {
     private int productId;
