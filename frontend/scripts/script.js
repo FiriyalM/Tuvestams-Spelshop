@@ -1,4 +1,5 @@
 /*Jesper Jensen*/
+var searchForm;
 var logInForm; //Reference to log in form
 var createAccForm; //Reference to create account form
 var updateAccForm; //Referece to update account form - user page
@@ -7,6 +8,10 @@ var userInfo; //Hold user info from getUserInformation
 window.onload = init;
 
 function init(){
+    searchForm = document.getElementById("searchForm");  //Saves reference to the search bar (form)
+
+    searchForm.addEventListener("submit", searchProduct);
+
     //All pages that has logIn/Create Account form
     if(document.querySelector("body").getAttribute("id") === "index" || document.querySelector("body").getAttribute("id") === "search" || document.querySelector("body").getAttribute("id") === "product"){
         if(sessionStorage.getItem("userName") !== null){  //If logged in, hide log in / create account forms
@@ -16,8 +21,8 @@ function init(){
     
             updateName(sessionStorage.getItem("userName"));  //Set shown name to logged in user
     
-            document.getElementById("userPageButton").onclick = goToUser;
-            document.getElementById("logOutButton").onclick = logOut;
+            document.getElementById("userPageButton").onclick = goToUser;  //Goes to the user page
+            document.getElementById("logOutButton").onclick = logOut;  //Log out
         }else{  //Else show the forms
             document.getElementById("logIn").style.display = "inherit";  //show log in
             document.getElementById("createAcc").style.display = "inherit";  //show create account
@@ -30,66 +35,71 @@ function init(){
         logInForm.addEventListener("submit", logIn);  //Eventlistener submit, runs logIn function
         createAccForm.addEventListener("submit", createAccount);  //Eventlistener submit, runs createAccount function
 
-        createAccForm.addEventListener("keyup", checkFields);
-        logInForm.addEventListener("keyup", checkFields);
+        createAccForm.addEventListener("keyup", checkFields);  //checks the create account form fields
+        logInForm.addEventListener("keyup", checkFields);  //checks the log in for fields
     }
 
     //If user page - only when logged in
     if(document.querySelector("body").getAttribute("id") === "user"){
-        updateAccForm = document.getElementById("updateAcc");
+        updateAccForm = document.getElementById("updateAcc");  //Saves reference to the update account form
         
-        updateAccForm.addEventListener("submit", updateAccount);
+        updateAccForm.addEventListener("submit", updateAccount);  //Eventlistener submit, runs update account
 
-        updateAccForm.addEventListener("keyup", checkFields);
+        updateAccForm.addEventListener("keyup", checkFields);  //checks the update account form fields
+    }
+
+    //If search page
+    if(document.querySelector("body").getAttribute("id") === "search"){
+        if(sessionStorage.getItem("searchResults") !== null){
+            let products = JSON.parse(sessionStorage.getItem("searchResults"));
+            let amountOfProducts = Object.keys(products).length;
+
+            for(let i = 0; i < amountOfProducts; i++){
+                createProductSection(products[i].id, products[i].name, products[i].consoleType, products[i].price, products[i].imgPath);
+            }
+        }
     }
 }
 
+/**
+ * Changes the url to the user page
+ */
 function goToUser(){
-    if(document.querySelector("body").getAttribute("id") === "index"){
+    if(document.querySelector("body").getAttribute("id") === "index"){  //Different file path from index
         location.replace("./pages/user.html");
     }else{
         location.replace("./user.html");
     }
 }
 
+/**
+ * Checks with the database to see if the user with that passwords exists and returns true/false
+ */
 function logIn(){
     let name = logInForm.userName.value;  //username
     let pass = logInForm.password.value;  //password
 
-    let userData = {  //Json object
-        "userName": name,
-        "password": pass
-    };
+    let encrypted = window.btoa(name + ":" + pass);  //Json to string as Base64
 
-    let encrypted = window.btoa(JSON.stringify(userData));  //Json to string as Base64
-
-    //Test
-    if(name != "" || pass != ""){
-        if(name === "abc" && pass === "abc"){
-            sessionStorage.setItem("userName", name);
-            set
-        }else{
-            alert("fel anväbndarnamn / lösenord")
-        }
-    }else{
-        alert("du måsstre fytlla i fälten");
+    if(name === "abc" && pass === "abc"){
+        sessionStorage.setItem("userName", name);
     }
 
-    fetch("http://localhost:8080/Backend/resources/user", {
+
+    fetch("http://its.teknikum.it:8080/tuvestams-spel-shop/resources/user", {
         method: "GET",
         mode: 'cors',
         headers: {
-            'Content-Type': 'text/plain'
+            'Authorization': 'Basic ' + encrypted
         },
-        body: encrypted
         }).then((response) => {
+            alert(response.status);
+            
             if(response.ok){
-                sessionStorage.setItem("username", name);  //Saves username in sessionStorage
-                location.reload();  //Reloads the page to remove log in and create account forms
-
-                logInForm.disabled = true;
+                sessionStorage.setItem("userName", name);  //Saves username in sessionStorage
+                location.reload();
             }else{
-                alert("Fel användarnamn/lösenord")
+                alert("Fel användarnamn/lösenord");
             }
 
             return response.json();
@@ -118,7 +128,7 @@ function createAccount(){
 
     let userData = {  //User information as json object
         "userName": name,
-        "password": pass,
+        "password": window.btoa(pass),
         "email": email,
         "phoneNumber": phone,
         "address": address,
@@ -126,22 +136,21 @@ function createAccount(){
         "city": city
     };
 
-    let encrypted = window.btoa(JSON.stringify(userData));  //Json to string as Base64
-
-    fetch("http://localhost:8080/Backend/resources/user", {
+    fetch("http://its.teknikum.it:8080/tuvestams-spel-shop/resources/user", {
         method: "POST",
-        mode: 'cors',
+        mode: 'no-cors',
         headers: {  
             'Content-Type': 'text/plain'
         },
-        body: encrypted  //Encrypted Json object as string
+        body: JSON.stringify(userData)
         }).then((response) => {
             if(response.ok){
                 sessionStorage.setItem("userName", name);  //Sparar användare
-                location.reload();
             }else{
                 alert("Det gick inte att skapa kontot")
             }
+
+            console.log(response.status);
 
             return response.json();
         }).catch(err => {
@@ -186,6 +195,8 @@ function updateAccount(){
                 sessionStorage.setItem("userName", name);  //Sparar användare
                 location.reload();
             }
+
+            console.log(response.status);
 
             return response.json();
         }).catch(err => {
@@ -301,7 +312,7 @@ function checkPhone(target){
  * @param {*} target 
  */
 function checkAddress(target){
-    let reg = /^\D+\d+.$/; //Regex
+    let reg = /^\D+\d+.*$/; //Regex
 
     let cleanedInput = target.value.trim();  //Fixed string
 
@@ -352,4 +363,77 @@ function testRegex(reg, input, css){
     }else{
         css.backgroundColor = "white";  //Show "normal" background. No errors
     }
+}
+
+function createProductSection(productId, productName, console, price, imgPath){
+    let sec = document.createElement("section");  //Product container
+    let img = document.createElement("img");  //Link to img
+    let titleH2 = document.createElement("h2");  //Game title
+    let priceH2 = document.createElement("h2");  //Game price
+    let consoleH2 = document.createElement("h2"); //Game console
+
+    let btn = document.createElement("button");  //Button
+
+    img.setAttribute("src", imgPath);
+    titleH2.innerHTML = productName;
+    priceH2.innerHTML = price + " kr";
+    consoleH2.innerHTML = console;
+    btn.innerHTML = "Lägg till";
+    btn.setAttribute("value", productId);
+
+    sec.append(img);
+    sec.append(titleH2);
+    sec.append(priceH2);
+    sec.append(btn);
+
+    document.querySelector("article").append(sec);
+}
+
+function addProductToCart(){
+    console.log(event.target);
+}
+
+function removeProductFromCart(){
+
+}
+
+function searchProduct(){
+    let searchValue = searchForm.searchBar.value.trim();
+
+    let productData = {
+        'productName': 'Minecraft'
+    };
+
+    fetch("http://its.teknikum.it:8080/tuvestams-spel-shop/resources/product/search/ProductName", {
+        method: "GET",
+        mode: 'no-cors',
+        headers: {
+            'productName': JSON.stringify(productData)  
+        },
+        }).then((response) => {
+            if(!response.ok){
+                alert(searchValue + " gav inga resultat");
+            }
+
+            console.log("Status : " + response.status);
+
+            return response.json();
+        }).then(data =>{
+            let products = {};  //Holds the products
+
+            for(let i = 0; i < data.length; i++){
+                products[i] = data[i];  //Add the products found in the database
+            }
+
+            sessionStorage.setItem("searchResults", JSON.stringify(products));  //Add the products to searchResults
+        }).catch(err => {
+            console.log(err);
+    });
+
+    /*
+    if(document.querySelector("body").getAttribute("id") === "index"){  //Different url from index
+        location.replace("./pages/search.html");
+    }else{
+        location.replace("./search.html");
+    }*/
 }

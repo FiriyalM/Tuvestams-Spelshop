@@ -14,9 +14,9 @@
         <a href="index.html">
             <img src="./images/tuvestam.png" alt="logo">
         </a>
-        <form>
+        <form id="searchForm" method="GET" onsubmit="return false">
             <fieldset>
-                <input type="search">
+                <input type="search" name="searchBar">
                 <input type="submit" value="Sök">
             </fieldset>
         </form>
@@ -25,7 +25,7 @@
         </a>
     </nav>
     <main>
-        <div><!--New games continer-->
+        <div id="newGames"><!--New games continer-->
             <h2>Nya spel</h2>
             <article>
                 <section>
@@ -44,9 +44,7 @@
                     <img src="./images/raider.jpg">
                 </section>
             </article>
-        </div>
         
-        <div><!--Recommended games container-->
             <h2>Rekommenderade spel</h2>
             <article>
                 <section>
@@ -67,43 +65,45 @@
             </article>
         </div>
 
-        <form id="logIn" method="POST"><!--Log in form-->
-            <fieldset>
-                <legend>Logga in</legend>
-                <label for="logInUserName">Användarnamn</label>
-                <input type="text" name="userName" id="logInUserName">
-                <label for="logInPassword">Lösenord</label>
-                <input type="password" name="password" id="logInPassword">
-                <input type="submit" value="Logga in">
-            </fieldset>
-        </form>
+        <div>
+            <form id="logIn" method="POST" onsubmit="return false"><!--Log in form-->
+                <fieldset>
+                    <legend>Logga in</legend>
+                    <label for="logInUserName">Användarnamn</label>
+                    <input type="text" name="userName" id="logInUserName">
+                    <label for="logInPassword">Lösenord</label>
+                    <input type="password" name="password" id="logInPassword">
+                    <input type="submit" value="Logga in">
+                </fieldset>
+            </form>
 
-        <form id="createAcc" method="POST"><!--Create account form-->
-            <fieldset>
-                <legend>Skapa konto</legend>
-                <label for="createAccUserName">Användarnamn</label>
-                <input type="text" name="userName" id="createAccUserName">
-                <label for="createAccPassword">Lösenord</label>
-                <input type="password" name="password" id="createAccPassword">
-                <label for="createAccEmail">Mail</label>
-                <input type="email" name="email" id="createAccEmail">
-                <label for="createAccPhone">Telefonnummer</label>
-                <input type="text" name="phone" id="createAccPhone">
-                <label for="createAccAddress">Adress</label>
-                <input type="text" name="address" id="createAccAddress">
-                <label for="createAccZip">Postnummer</label>
-                <input type="text" name="zip" id="createAccZip">
-                <label for="createAccCity">Stad</label>
-                <input type="text" name="city" id="createAccCity">
-                <input type="submit" value="Skapa konto">
-            </fieldset>
-        </form>
+            <form id="createAcc" method="POST" onsubmit="return false"><!--Create account form-->
+                <fieldset>
+                    <legend>Skapa konto</legend>
+                    <label for="createAccUserName">Användarnamn</label>
+                    <input type="text" name="userName" id="createAccUserName">
+                    <label for="createAccPassword">Lösenord</label>
+                    <input type="password" name="password" id="createAccPassword">
+                    <label for="createAccEmail">Mail</label>
+                    <input type="email" name="email" id="createAccEmail">
+                    <label for="createAccPhone">Telefonnummer</label>
+                    <input type="text" name="phone" id="createAccPhone">
+                    <label for="createAccAddress">Adress</label>
+                    <input type="text" name="address" id="createAccAddress">
+                    <label for="createAccZip">Postnummer</label>
+                    <input type="text" name="zip" id="createAccZip">
+                    <label for="createAccCity">Stad</label>
+                    <input type="text" name="city" id="createAccCity">
+                    <input type="submit" value="Skapa konto">
+                </fieldset>
+            </form>
 
-        <section id="logOut">
-            <h3>namn</h3>
-            <button id="userPageButton">Mitt konto</button>
-            <button id="logOutButton">Logga Ut</button>
-        </section>
+            <section id="logOut">
+                <h3>namn</h3>
+                <button id="userPageButton">Mitt konto</button>
+                <button id="logOutButton">Logga Ut</button>
+            </section>
+        </div>
     </main>
     <footer>
         <p>Kontakta Oss:</p>
