@@ -83,10 +83,4 @@ public class OrderResource {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
     }
-    
-    
-    /*
-    @GET
-    public showOrder
-    */
 }

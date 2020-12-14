@@ -18,7 +18,7 @@ public class Product {
     private String price;
     private int amountInStock;
 
-    public Product(int productId, String productName, String consoleType, String info, String imagePath, String price, int amountInStock) {
+    public Product(int productId, String productName, String consoleType, String info, String price, String imagePath, int amountInStock) {
         this.productId = productId;
         this.productName = productName;
         this.consoleType = consoleType;
@@ -83,7 +83,4 @@ public class Product {
     public void setAmountInStock(int amountInStock) {
         this.amountInStock = amountInStock;
     }
-    
-    
-
 }

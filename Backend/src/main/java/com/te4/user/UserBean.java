@@ -1,4 +1,4 @@
-/*
+ /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -12,7 +12,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
 
 /**
  *
@@ -28,13 +30,14 @@ public class UserBean {
         int colon = auth.indexOf(":");
         String userName = auth.substring(0, colon);
         String password = auth.substring(colon+1);
+        System.out.println(auth);
         return new User(userName, password);
     }
     
     /**
      * den roppars när man gör en fetch från http://localhost:8080/Backend/resources/user , Method GET 
      * metoden kollar om userName och password fins i databasen.
-     * */
+     * */ 
     public boolean logInUser(User user){
         try (Connection con = ConnectionFactory.getConnection()){
             
@@ -52,8 +55,8 @@ public class UserBean {
             }else{
                 return false;
             }
-            
         } catch (Exception e) {
+           System.out.println("Error UserBean.logInUser: " +e.getMessage());
             return false;
         }
     }
@@ -165,24 +168,28 @@ public class UserBean {
    * den roppars när man gör en fetch från http://localhost:8080/Backend/resources/user/searchUser , Method GET 
    * den hämtar alla användarens införmation när admin söker efter en användare på sin userName
    */
-   public int searchUser(User user, UserInfo userInfo){
+   public List<Object> searchUser(User user, UserInfo userInfo){
+       
+       List<Object> userData = new ArrayList<Object>();
+       
        try (Connection con = ConnectionFactory.getConnection()){
            
-            String sql = "SELECT * FROM user WHERE userName=?";
-            String sql2 = "SELECT * FROM userInfo WHERE userName=?";
+            String sql = "SELECT * FROM `user` WHERE userName=?";
+            String sql2 = "SELECT * FROM `userInfo` WHERE userName=?";
             
-            PreparedStatement stmt = con.prepareStatement(sql2);
+            PreparedStatement stmt = con.prepareStatement(sql + sql2);
             stmt.setString(1, user.getUserName());
             ResultSet data = stmt.executeQuery();
-            
             while(data.next()){
-                System.out.println(userInfo.getUserName());
+                
                 //visa användarens införmation
+                
             }
             
-            return 1;
+            return userData;
         } catch (Exception e) {
-            return 0;
+           System.out.println("Error UserBean.searchUser: " +e.getMessage());
+            return null;
         }
    }
 }

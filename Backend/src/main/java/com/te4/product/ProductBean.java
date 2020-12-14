@@ -19,6 +19,7 @@ import javax.ejb.Stateless;
  */
 @Stateless
 public class ProductBean {
+    
     /**
      * den roppars när man gör en fetch från http://localhost:8080/Backend/resources/product , Method POST 
      * metoden sparar en product information i databasen
@@ -100,10 +101,11 @@ public class ProductBean {
           
          try (Connection con = ConnectionFactory.getConnection()){
              
-           String createProduct = "SELECT * FROM `product` WHERE productName=?";
+           String createProduct = "SELECT * FROM `product` WHERE productName=? OR productId =?";
            
             PreparedStatement stmt = con.prepareStatement(createProduct);
             stmt.setString(1, product.getProductName());
+            stmt.setInt(2, product.getProductId());
             ResultSet data = stmt.executeQuery();
             
             while(data.next()){
