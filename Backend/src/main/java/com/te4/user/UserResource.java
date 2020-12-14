@@ -134,7 +134,6 @@ public class UserResource {
     /**
      * med denna metoden söker admin efter användaren med hjälp av användarens namn.
      * den får bara anvädarens namn {"userName":"användarens namn"} 
-     * */
     @GET
     @Path("searchUser")
     @Consumes(MediaType.TEXT_PLAIN)
@@ -144,10 +143,7 @@ public class UserResource {
         User user = gson.fromJson(userName, User.class);
         UserInfo userInfo = gson.fromJson(userName, UserInfo.class);
         
-        if(userBean.searchUser(user, userInfo) == 1){
-           return Response.ok().build();
-        }else{
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
+        
     }
+     * */
 }
