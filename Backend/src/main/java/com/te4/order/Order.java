@@ -65,6 +65,4 @@ public class Order {
     public void setPurchaseDate(String purchaseDate) {
         this.purchaseDate = purchaseDate;
     }
-    
-    
 }

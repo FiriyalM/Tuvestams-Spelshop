@@ -130,6 +130,7 @@ public class UserResource {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
     }
+    
     /**
      * med denna metoden söker admin efter användaren med hjälp av användarens namn.
      * den får bara anvädarens namn {"userName":"användarens namn"} 

@@ -28,13 +28,14 @@ public class UserBean {
         int colon = auth.indexOf(":");
         String userName = auth.substring(0, colon);
         String password = auth.substring(colon+1);
+        System.out.println(auth);
         return new User(userName, password);
     }
     
     /**
      * den roppars när man gör en fetch från http://localhost:8080/Backend/resources/user , Method GET 
      * metoden kollar om userName och password fins i databasen.
-     * */
+     * */ 
     public boolean logInUser(User user){
         try (Connection con = ConnectionFactory.getConnection()){
             
@@ -52,8 +53,8 @@ public class UserBean {
             }else{
                 return false;
             }
-            
         } catch (Exception e) {
+           System.out.println("Error UserBean.logInUser: " +e.getMessage());
             return false;
         }
     }
@@ -182,6 +183,7 @@ public class UserBean {
             
             return 1;
         } catch (Exception e) {
+           System.out.println("Error UserBean.searchUser: " +e.getMessage());
             return 0;
         }
    }

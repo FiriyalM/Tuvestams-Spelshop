@@ -82,7 +82,4 @@ public class UserInfo {
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
-    
-    
-    
 }

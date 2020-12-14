@@ -19,6 +19,7 @@ import javax.ejb.Stateless;
  */
 @Stateless
 public class ProductBean {
+    
     /**
      * den roppars när man gör en fetch från http://localhost:8080/Backend/resources/product , Method POST 
      * metoden sparar en product information i databasen
