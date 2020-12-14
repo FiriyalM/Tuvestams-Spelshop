@@ -28,8 +28,8 @@ nav{
 
 main{
     grid-area: main;
-    border-left: 1px solid black;
-    border-right: 1px solid black;
+    border-left: 1px solid rgb(174, 230, 100);
+    border-right: 1px solid rgb(174, 230, 100);
     min-height: 500px;
 }
 
@@ -205,36 +205,36 @@ main>div>form>fieldset>input[type="submit"], main>div:first-of-type>form>fieldse
     display: grid;
     grid-template-areas:
         "img title title"
-        "img price price"
-        "none none button";
-    grid-template-columns: 4fr 3fr 3fr;
-    grid-template-rows: 50px 35px 1fr;
+        "img console price"
+        "img none button";
+    grid-template-columns: 2fr 3fr 3fr;
+    grid-template-rows: 1fr 40px 40px;
     gap: 15px;
+    padding: 15px;
     width: 100%;
-    height: 160px;
+    height: auto;
 }
 
 /*game image*/
 #checkout section>img, #search section>img, #user section>img, #admin section>img{
     grid-area: img;
-    width: 92.5px;
-    height: auto;
-    padding: 15px;
+    height: 150px;
 }
 
 /*price*/
 #checkout h2:last-of-type, #search h2:last-of-type, #user h2:last-of-type, #admin h2:last-of-type{
     grid-area: price;
-    display: inline;
-    text-align: center;
 }
 
 /*title*/
 #checkout h2:first-of-type, #search h2:first-of-type, #user h2:first-of-type, #admin h2:first-of-type{
     grid-area: title;
-    display: block;
-    margin-left: 15px;
-    padding-top: 15px;
+    white-space: normal;
+}
+
+/*console type + general h2*/
+#checkout h2, #search h2, #user h2, #admin h2{
+    text-align: center;
 }
 
 

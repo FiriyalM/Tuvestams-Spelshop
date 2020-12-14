@@ -9,7 +9,6 @@ window.onload = init;
 
 function init(){
     searchForm = document.getElementById("searchForm");  //Saves reference to the search bar (form)
-
     searchForm.addEventListener("submit", searchProduct);
 
     //All pages that has logIn/Create Account form
@@ -54,8 +53,34 @@ function init(){
             let products = JSON.parse(sessionStorage.getItem("searchResults"));
             let amountOfProducts = Object.keys(products).length;
 
+            console.log(products);
+
             for(let i = 0; i < amountOfProducts; i++){
-                createProductSection(products[i].id, products[i].name, products[i].consoleType, products[i].price, products[i].imgPath);
+                createProductSection(products[i].productId, products[i].productName, products[i].consoleType, products[i].price, products[i].imgPath);
+            }
+
+            sessionStorage.removeItem("searchResults");
+        }else{
+            alert("Din sökning gav inga resultat");
+        }
+    }
+
+    //If checkout page
+    if(document.querySelector("body").getAttribute("id") === "checkout"){
+        if(sessionStorage.getItem("cart") !== null){
+            let cart = sessionStorage.getItem("cart");  //Entire cart. Items separated by ",". ex. 6,5,42,2332,
+            let amount = 0;  //Hold teh amount of products in the cart
+
+            for(let i = 0; i < cart.length; i++){
+                if(cart[i] === ","){  //After every "," counts as 1 item
+                    amount++;  
+                }
+            }
+
+            let products = getCartItems(cart);
+
+            for(let i = 0; i < amount; i++){
+                createProductSection(products[i].productId, products[i].productName, products[i].consoleType, products[i].price, products[i].imgPath);
             }
         }
     }
@@ -374,66 +399,105 @@ function createProductSection(productId, productName, console, price, imgPath){
 
     let btn = document.createElement("button");  //Button
 
+    if(document.querySelector("body").getAttribute("id") === "checkout"){
+        btn.onclick = removeProductFromCart;
+        btn.innerHTML = "Ta bort";
+    }else if(document.querySelector("body").getAttribute("id") === "search"){
+        btn.onclick = addProductToCart;
+        btn.innerHTML = "Lägg till";
+    }
+
     img.setAttribute("src", imgPath);
     titleH2.innerHTML = productName;
-    priceH2.innerHTML = price + " kr";
     consoleH2.innerHTML = console;
-    btn.innerHTML = "Lägg till";
+    priceH2.innerHTML = price + " kr";
     btn.setAttribute("value", productId);
 
     sec.append(img);
     sec.append(titleH2);
+    sec.append(consoleH2);
     sec.append(priceH2);
     sec.append(btn);
 
     document.querySelector("article").append(sec);
 }
 
-function addProductToCart(){
-    console.log(event.target);
+function addProductToCart(){  //Adds the product to the cart
+    if(sessionStorage.getItem("userName") !== null){  //If the user is logged in
+        if(sessionStorage.getItem("cart") !== null){  //If items are added to the cart
+            let currentCart = sessionStorage.getItem("cart");
+            currentCart += event.target.value + ",";
+
+            sessionStorage.setItem("cart", currentCart);
+        }else{  //Else add first item to the cart
+            sessionStorage.setItem("cart", event.target.value + ",");
+        }
+    }else{
+        alert("Du måste vara inloggad för att lägga till en produkt");
+    }
 }
 
 function removeProductFromCart(){
+    let currentCart = sessionStorage.getItem("cart");
+    let product = event.target.value;
+    let newCart = currentCart.replace(product + ",", "");
 
+    sessionStorage.setItem("cart", newCart);
 }
 
-function searchProduct(){
+/**
+ * Takes the value from the search field and checks with the database if the item exists.
+ * 
+ * If the item(s) exists returns and saves the result in session storage "searchResults" 
+ */
+async function searchProduct(){
     let searchValue = searchForm.searchBar.value.trim();
 
     let productData = {
-        'productName': 'Minecraft'
+        'productName': searchValue
     };
 
-    fetch("http://its.teknikum.it:8080/tuvestams-spel-shop/resources/product/search/ProductName", {
+    await fetch("http://its.teknikum.it:8080/tuvestams-spel-shop/resources/product/search/ProductName", {
         method: "GET",
-        mode: 'no-cors',
+        mode: 'cors',
         headers: {
             'productName': JSON.stringify(productData)  
         },
         }).then((response) => {
-            if(!response.ok){
-                alert(searchValue + " gav inga resultat");
-            }
-
             console.log("Status : " + response.status);
 
             return response.json();
         }).then(data =>{
-            let products = {};  //Holds the products
-
-            for(let i = 0; i < data.length; i++){
-                products[i] = data[i];  //Add the products found in the database
-            }
-
-            sessionStorage.setItem("searchResults", JSON.stringify(products));  //Add the products to searchResults
+            sessionStorage.setItem("searchResults", JSON.stringify(data));  //Add the products to searchResults
         }).catch(err => {
-            console.log(err);
-    });
-
-    /*
+            console.log(err);          
+        });
+        
     if(document.querySelector("body").getAttribute("id") === "index"){  //Different url from index
         location.replace("./pages/search.html");
     }else{
         location.replace("./search.html");
-    }*/
+    }
+}
+    
+async function getCartItems(items){
+    let products;  //Holds the cart products
+
+    await fetch("http://its.teknikum.it:8080/tuvestams-spel-shop/resources/product/search/ProductName", {
+        method: "GET",
+        mode: 'cors',
+        headers: {
+            'productName': items  
+        },
+        }).then((response) => {
+            console.log("Status : " + response.status);
+
+            return response.json();
+        }).then(data =>{
+            products = data;
+        }).catch(err => {
+            console.log(err);
+    });
+
+    return products;
 }
