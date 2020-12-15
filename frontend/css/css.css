@@ -254,6 +254,13 @@ main>div>form>fieldset>input[type="submit"], main>div:first-of-type>form>fieldse
     grid-column: 3;
 }
 
+#checkout main>button{
+    width: 80%;
+    height: 50px;
+    font-size: 1.4em;
+    margin-bottom: 15px;
+}
+
 #admin article{
     height: auto;
     padding: 15px;
@@ -423,6 +430,13 @@ main>div>form>fieldset>input[type="submit"], main>div:first-of-type>form>fieldse
     #checkout article{
         grid-row: 1;
         grid-column: 2;
+    }
+
+    /*Order button*/
+    #checkout main>button{
+        grid-row: 2;
+        grid-column: 2;
+        width: 50%;
     }
 
     #product article{
