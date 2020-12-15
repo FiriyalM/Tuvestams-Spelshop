@@ -74,17 +74,17 @@ function init(){
                     amount++;  
                 }
             }
-/*
+
             let products = getCartItems(cart);  //Get the products in the cart as objects
 
             for(let i = 0; i < amount; i++){  //Create the product sections
                 createProductSection(products[i].productId, products[i].productName, products[i].consoleType, products[i].price, products[i].imgPath);
             }
-*/
-            document.getElementById("order").style.display = "inherit";
-            document.getElementById("order").onclick = createOrder;
-        }else{
-            document.getElementById("order").style.display = "none";
+
+            document.getElementById("order").style.display = "inherit";  //Show order button
+            document.getElementById("order").onclick = createOrder;  //Assigns the button to the createOrder function
+        }else{  //If the cart is empty
+            document.getElementById("order").style.display = "none";  //Hide order button
         }
     }
 }
@@ -109,11 +109,6 @@ function logIn(){
 
     let encrypted = window.btoa(name + ":" + pass);  //Json to string as Base64
 
-    if(name === "abc" && pass === "abc"){
-        sessionStorage.setItem("userName", name);
-    }
-
-
     fetch("http://its.teknikum.it:8080/tuvestams-spel-shop/resources/user", {
         method: "GET",
         mode: 'cors',
@@ -121,7 +116,7 @@ function logIn(){
             'Authorization': 'Basic ' + encrypted
         },
         }).then((response) => {
-            alert(response.status);
+            console.log(response.status);
             
             if(response.ok){
                 sessionStorage.setItem("userName", name);  //Saves username in sessionStorage
@@ -141,6 +136,7 @@ function logIn(){
  */
 function logOut(){
     sessionStorage.removeItem("userName");  //Removes the logged in user
+    sessionStorage.removeItem("cart");  //Clears the cart
     location.reload();  //reloads the page
 }
 
@@ -393,6 +389,15 @@ function testRegex(reg, input, css){
     }
 }
 
+/**
+ * Creates a product section 
+ * 
+ * @param {Int} productId 
+ * @param {String} productName 
+ * @param {String} console 
+ * @param {Int} price 
+ * @param {String} imgPath 
+ */
 function createProductSection(productId, productName, console, price, imgPath){
     let sec = document.createElement("section");  //Product container
     let img = document.createElement("img");  //Link to img
@@ -402,12 +407,12 @@ function createProductSection(productId, productName, console, price, imgPath){
 
     let btn = document.createElement("button");  //Button
 
-    if(document.querySelector("body").getAttribute("id") === "checkout"){
-        btn.onclick = removeProductFromCart;
-        btn.innerHTML = "Ta bort";
-    }else if(document.querySelector("body").getAttribute("id") === "search"){
-        btn.onclick = addProductToCart;
-        btn.innerHTML = "Lägg till";
+    if(document.querySelector("body").getAttribute("id") === "checkout"){  //If checkout page
+        btn.onclick = removeProductFromCart;  //Assign remove cart function
+        btn.innerHTML = "Ta bort";  //Changes button text
+    }else if(document.querySelector("body").getAttribute("id") === "search"){  //If search page
+        btn.onclick = addProductToCart;  //Assign addProductToCart function
+        btn.innerHTML = "Lägg till";  //Changes button text
     }
 
     img.setAttribute("src", imgPath);
@@ -425,27 +430,33 @@ function createProductSection(productId, productName, console, price, imgPath){
     document.querySelector("article").append(sec);
 }
 
+/**
+ * Adds the clicked product to the cart
+ */
 function addProductToCart(){  //Adds the product to the cart
     if(sessionStorage.getItem("userName") !== null){  //If the user is logged in
         if(sessionStorage.getItem("cart") !== null){  //If items are added to the cart
-            let currentCart = sessionStorage.getItem("cart");
-            currentCart += event.target.value + ",";
+            let currentCart = sessionStorage.getItem("cart");  //Gets the cart products
+            currentCart += event.target.value + ",";  //Adds the product to the cart
 
-            sessionStorage.setItem("cart", currentCart);
+            sessionStorage.setItem("cart", currentCart);  //Updates the cart
         }else{  //Else add first item to the cart
-            sessionStorage.setItem("cart", event.target.value + ",");
+            sessionStorage.setItem("cart", event.target.value + ",");  //Adds the product to the cart
         }
-    }else{
+    }else{  //Not logged in
         alert("Du måste vara inloggad för att lägga till en produkt");
     }
 }
 
+/**
+ * Removes the clicked product from the cart
+ */
 function removeProductFromCart(){
-    let currentCart = sessionStorage.getItem("cart");
-    let product = event.target.value;
-    let newCart = currentCart.replace(product + ",", "");
+    let currentCart = sessionStorage.getItem("cart");  //Gets the cart items
+    let product = event.target.value;  //Gets the id from the clicked product
+    let newCart = currentCart.replace(product + ",", ""); //Removes the item from the cart
 
-    sessionStorage.setItem("cart", newCart);
+    sessionStorage.setItem("cart", newCart);  //Updates the cart
 }
 
 /**
@@ -483,6 +494,12 @@ async function searchProduct(){
     }
 }
     
+/**
+ * Takes the items from the cart (their ids) and returns the products as objects
+ * 
+ * items = "65,2,44,5,"
+ * @param {String} items 
+ */
 async function getCartItems(items){
     let products;  //Holds the cart products
 
@@ -505,7 +522,10 @@ async function getCartItems(items){
     return products;
 }
 
-function createOrder(){
+/**
+ * Takes the items in the users cart and creates and order for the logged in user 
+ */
+async function createOrder(){
 //json, json, json
     let date = new Date();  
     let month = date.getMonth() + 1;  //Day
@@ -531,7 +551,7 @@ function createOrder(){
         products += "{'userName': " + userName + ", 'productId': " + Object.keys(amount)[i] + ", 'amountPurchased': " + amount[Object.keys(amount)[i]] + ", 'purchaseDate': " + fullDate + "},";
     }
 
-    fetch("http://its.teknikum.it:8080/tuvestams-spel-shop/resources/order", {
+    await fetch("http://its.teknikum.it:8080/tuvestams-spel-shop/resources/order", {
         method: "POST",
         mode: "no-cors",
         headers:{
@@ -539,25 +559,16 @@ function createOrder(){
         },
         body: products
     }).then((response) => {
+        if(response.ok){
+            document.getElementById("order").innerHTML = "Tillbaka till start";
+            document.getElementById("order").onclick = location.replace("../index.html");
+            sessionStorage.removeItem("cart");
+        }
+
         console.log("Status : " + response.status);
 
         return response.json();
     }).catch(err =>{
         console.error(err);
     });
-}
-
-function sort(array){
-    let len = array.length;
-    for (let i = 0; i < len; i++) {
-        for (let j = 0; j < len; j++) {
-            if (array[j] > array[j + 1]) {
-                let temp = array[j];
-                array[j] = array[j + 1];
-                array[j + 1] = temp;
-            }
-        }
-    }
-
-    return array;
 }
