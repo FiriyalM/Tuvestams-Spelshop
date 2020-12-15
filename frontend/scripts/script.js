@@ -49,13 +49,11 @@ function init(){
 
     //If search page
     if(document.querySelector("body").getAttribute("id") === "search"){
-        if(sessionStorage.getItem("searchResults") !== null){
-            let products = JSON.parse(sessionStorage.getItem("searchResults"));
-            let amountOfProducts = Object.keys(products).length;
+        if(sessionStorage.getItem("searchResults") !== null){  //If there are results
+            let products = JSON.parse(sessionStorage.getItem("searchResults"));  //Parse the JSON string to json objects
+            let amountOfProducts = Object.keys(products).length;  //Count the amount of objects
 
-            console.log(products);
-
-            for(let i = 0; i < amountOfProducts; i++){
+            for(let i = 0; i < amountOfProducts; i++){  //Create the product sections
                 createProductSection(products[i].productId, products[i].productName, products[i].consoleType, products[i].price, products[i].imgPath);
             }
 
@@ -67,21 +65,26 @@ function init(){
 
     //If checkout page
     if(document.querySelector("body").getAttribute("id") === "checkout"){
-        if(sessionStorage.getItem("cart") !== null){
+        if(sessionStorage.getItem("cart") !== null){  //If the cart is not empty
             let cart = sessionStorage.getItem("cart");  //Entire cart. Items separated by ",". ex. 6,5,42,2332,
-            let amount = 0;  //Hold teh amount of products in the cart
+            let amount = 0;  //Holds the amount of products in the cart
 
             for(let i = 0; i < cart.length; i++){
                 if(cart[i] === ","){  //After every "," counts as 1 item
                     amount++;  
                 }
             }
+/*
+            let products = getCartItems(cart);  //Get the products in the cart as objects
 
-            let products = getCartItems(cart);
-
-            for(let i = 0; i < amount; i++){
+            for(let i = 0; i < amount; i++){  //Create the product sections
                 createProductSection(products[i].productId, products[i].productName, products[i].consoleType, products[i].price, products[i].imgPath);
             }
+*/
+            /*Create order button*/
+            let btn = document.createElement("button");
+            btn.onclick = createOrder;
+            document.querySelector("body").append(btn);
         }
     }
 }
@@ -470,7 +473,7 @@ async function searchProduct(){
         }).then(data =>{
             sessionStorage.setItem("searchResults", JSON.stringify(data));  //Add the products to searchResults
         }).catch(err => {
-            console.log(err);          
+            console.error(err);          
         });
         
     if(document.querySelector("body").getAttribute("id") === "index"){  //Different url from index
@@ -485,7 +488,7 @@ async function getCartItems(items){
 
     await fetch("http://its.teknikum.it:8080/tuvestams-spel-shop/resources/product/search/ProductName", {
         method: "GET",
-        mode: 'cors',
+        mode: 'no-cors',
         headers: {
             'productName': items  
         },
@@ -496,8 +499,74 @@ async function getCartItems(items){
         }).then(data =>{
             products = data;
         }).catch(err => {
-            console.log(err);
+            console.error(err);
     });
 
     return products;
+}
+
+function createOrder(){  //ProductId = 3,1,6,2,3,
+//json, json, json
+    let date = new Date();  
+    let month = date.getMonth() + 1;  //Day
+    let day = date.getDate();  //Month
+    let year = date.getFullYear();  //Year
+    
+    if(month < 10){  //If the month is ex. 2 i will look like 02 instead. Makes the month double digit
+        month = "0" + month;
+    }
+
+    let fullDate = year + "-" + month + "-" + day;  //Date format
+    console.log(fullDate);
+
+    let userName = sessionStorage.getItem("userName");
+
+    let products = "";  //Holds the products orderes "{json},{json},{json}" as a string
+
+    let ids = sessionStorage.getItem("cart").slice(0, -1).split(",");  //Slices removes last ",". Split splits the order ids into an array
+
+    for(let i = 0; i < ids.length; i++){
+        console.log(ids[i]);
+    }
+
+    while(o < ids.length){
+
+    }
+
+    for(let i = 0; i < ; i++){  //Creates the jsons string
+        products += "{'userName': " + userName + ", 'productId': " + 3 + ", 'amountPurchased': " + 3 + ", 'purchaseDate': " + fullDate + "},";
+    }
+
+    console.log(products);
+/*
+    fetch("http://its.teknikum.it:8080/tuvestams-spel-shop/resources/order", {
+        method: "POST",
+        mode: "cors",
+        headers:{
+            "Content-Type": "text/plain"
+        },
+        body: products
+    }).then((response) => {
+        console.log("Status : " + response.status);
+
+        return response.json();
+    }).catch(err =>{
+        console.error(err);
+    });*/
+}
+
+function sort(array){
+    let bubbleSort = (inputArr) => {
+        let len = array.length;
+        for (let i = 0; i < len; i++) {
+            for (let j = 0; j < len; j++) {
+                if (array[j] > array[j + 1]) {
+                    let temp = array[j];
+                    array[j] = array[j + 1];
+                    array[j + 1] = temp;
+                }
+            }
+        }
+        return inputArr;
+    };
 }
