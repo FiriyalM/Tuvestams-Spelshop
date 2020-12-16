@@ -6,6 +6,7 @@
 package com.te4.product;
 
 import com.google.gson.Gson;
+import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ws.rs.Consumes;
@@ -43,7 +44,7 @@ public class ProductResource {
         if(newProduct == null){
             return Response.status(Response.Status.NO_CONTENT).build();
         }else if(newProduct.isEmpty()){
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            return Response.status(Response.Status.BAD_REQUEST).build();
         }else{
            return Response.ok(newProduct).header("Access-Control-Allow-Origin","*").build();
         }
@@ -56,18 +57,30 @@ public class ProductResource {
     @GET
     @Path("search/productName")
     public Response searchProduct(@HeaderParam("productName")String productName){
-        Gson gson = new Gson();
-        Product product = gson.fromJson(productName, Product.class);
-        
-        List<Product> newProduct = productBean.searchProductByProductName(product);
-        
-        if(newProduct == null){
-            return Response.status(Response.Status.NO_CONTENT).build();
-        }else if(newProduct.isEmpty()){
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        if(productName.charAt(0) == '{'){
+            
+            Gson gson = new Gson();
+            Product product = gson.fromJson(productName, Product.class);
+            
+            List<Product> newProduct = productBean.searchProductByProductName(product);
+
+            if(newProduct == null){
+                return Response.status(Response.Status.NO_CONTENT).build();
+            }else if(newProduct.isEmpty()){
+                return Response.status(Response.Status.BAD_REQUEST).build();
+            }else{
+               return Response.ok(newProduct).header("Access-Control-Allow-Origin","*").build();
+            }
         }else{
-           return Response.ok(newProduct).header("Access-Control-Allow-Origin","*").build();
-        }
+           String[] productId = productName.split(",");
+           List<Product> product = new ArrayList<Product>();
+            for (int i = 0; i < productId.length; i++) {
+                System.out.println(productId[i]);
+                product.add(productBean.showProduct(Integer.parseInt(productId[i])));
+            }
+            
+           return Response.ok(product).build();
+        }    
     }
     
     /**
