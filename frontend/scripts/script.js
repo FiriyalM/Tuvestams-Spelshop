@@ -502,7 +502,7 @@ function removeProductFromCart(){
  * If the item(s) exists returns and saves the result in session storage "searchResults" 
  */
 async function searchProduct(){
-    let searchValue = event.target.searchBar.value.trim();
+    let searchValue = searchForm.searchBar.value.trim();
 
     let productData = {
         'productName': searchValue
@@ -638,7 +638,25 @@ function changeProduct(){
 }
 
 function deleteProduct(){
-    
+    let id = event.target.value;
+
+    let productId = {
+        'productId': id
+    };
+
+    fetch("http://its.teknikum.it:8080/tuvestams-spel-shop/resources/product", {
+        method: "DELETE",
+        mode: 'no-cors',
+        headers: {
+            'productId': productId
+        },
+        }).then((response) => {
+            console.log("Status : " + response.status);
+
+            return response.json();
+        }).catch(err => {
+            console.error(err);
+    });
 }
 
 async function searchConsoleType(){
@@ -652,7 +670,7 @@ async function searchConsoleType(){
         method: "GET",
         mode: 'no-cors',
         headers: {
-            'ConsoleType': consoleType
+            'consoleType': consoleType
         },
         }).then((response) => {
             console.log("Status : " + response.status);
