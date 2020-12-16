@@ -107,7 +107,6 @@ public class ProductBean {
             stmt.setString(1, product.getProductName());
             stmt.setInt(2, product.getProductId());
             ResultSet data = stmt.executeQuery();
-            
             while(data.next()){
                 int productId = data.getInt("productId");
                 String productName = data.getString("productName");
@@ -127,6 +126,38 @@ public class ProductBean {
             return null;
         }
     }
+    
+     
+     /**
+      * den roppars när man gör en fetch från http://localhost:8080/Backend/resources/product/search/ProductName , Method GET 
+     *  metoden hämtar product från databasen beroande på productId som skickas.
+      * */
+     public Product showProduct(int productId){
+         try (Connection con = ConnectionFactory.getConnection()){
+             
+                String  getProduct = "SELECT * FROM `product` WHERE `productId`=?";
+                
+                PreparedStatement pstmt = con.prepareStatement(getProduct);
+                pstmt.setInt(1, productId);
+                ResultSet data = pstmt.executeQuery();
+
+                data.next();
+                Product product = new Product(
+                        data.getInt("productId"), 
+                        data.getString("productName"),
+                        data.getString("consoleType"),
+                        data.getString("info"),
+                        data.getString("price"), 
+                        data.getString("imgPath"),
+                        data.getInt("amountInStock"));
+                
+                return product;
+         } catch (Exception e) {
+             System.out.println("Error ProductBean.showProduct: " +e.getMessage());
+            return null;
+         }
+     }
+    
     
     /**
      * den roppars när man gör en fetch från http://localhost:8080/Backend/resources/product/search/ConsoleType , Method GET 
