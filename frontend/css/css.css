@@ -261,22 +261,56 @@ main>div>form>fieldset>input[type="submit"], main>div:first-of-type>form>fieldse
     margin-bottom: 15px;
 }
 
+/*Containers*/
 #admin article{
     height: auto;
     padding: 15px;
     box-sizing: border-box;
+    border: 1px solid black;
 }
 
+/*Search bar*/
 #admin article>form>fieldset{
     border: none;
     padding-left: 0;
     padding-right: 0;
 }
 
+/*Search form*/
+#admin article>form{
+    margin-bottom: 15px;
+}
+
 /*Search results container*/
 #admin div{
     max-height: 600px;
     overflow: auto;
+}
+
+/*Admin sections*/
+#admin section{
+    display: grid;
+    grid-template-areas:
+        "img title title"
+        "img console price"
+        "img edit remove";
+    grid-template-columns: 2fr 3fr 3fr;
+    grid-template-rows: 1fr 40px 40px;
+    gap: 15px;
+    padding: 15px;
+    width: initial;
+    border: 1px solid rgb(174, 230, 100);
+    background-color: rgb(243, 255, 227);
+}
+
+/*Remove button products*/
+#admin section>button:first-of-type{
+    grid-area: remove;
+}
+
+/*Edit button products*/
+#admin section>button:last-of-type{
+    grid-area: edit;
 }
 
 /*Users section*/
@@ -316,10 +350,6 @@ main>div>form>fieldset>input[type="submit"], main>div:first-of-type>form>fieldse
     grid-template-areas: none;
     grid-template-rows: auto;
     grid-template-columns: 1fr;
-}
-
-#admin article:last-of-type>form>fieldset>input{
-    width: 100%;
 }
 
 #admin article:last-of-type>form>fieldset>input[type=submit]{
