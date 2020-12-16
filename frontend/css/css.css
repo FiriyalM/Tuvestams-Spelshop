@@ -20,7 +20,8 @@ nav{
     display: grid;
     grid-template-areas: 
     "logo cart"
-    "search search";
+    "search search"
+    "category category";
     background-color: rgb(174, 230, 100);
     padding: 15px;
     row-gap: 5px;
@@ -117,6 +118,41 @@ nav>a:first-of-type>img{
     margin-top: 5px;
 }
 
+/*Category container*/
+nav>section{
+    grid-area: category;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    width: 100%;
+}
+
+/*Category buttons - console type*/
+nav>section>button{
+    margin: 0;
+    border: none;
+    font-size: 1.2em;
+    border-left:  1px solid rgb(102, 139, 53);
+    border-right: 1px solid rgb(102, 139, 53);
+    background-color: rgb(174, 230, 100);
+}
+
+/*First button - left*/
+nav>section>button:first-of-type{
+    border-left:  2px solid rgb(102, 139, 53);
+    border-right: 1px solid rgb(102, 139, 53);
+}
+
+/*Last button - right*/
+nav>section>button:last-of-type{
+    border-left:  1px solid rgb(102, 139, 53);
+    border-right: 2px solid rgb(102, 139, 53);
+}
+
+/*Category buttons hover*/
+nav>section>button:hover{
+    background-color: rgb(218, 255, 169);
+}
+
 /*Log in / Create Account*/
 main>div>form, main>div:first-of-type>form, #user>main>form{
     box-sizing: border-box;
@@ -201,7 +237,7 @@ main>div>form>fieldset>input[type="submit"], main>div:first-of-type>form>fieldse
 }
 
 /*product container*/
-#checkout section, #search section, #user section, #admin section{
+#checkout article>section, #search article>section, #user article>section, #admin article>section{
     display: grid;
     grid-template-areas:
         "img title title"
@@ -239,7 +275,7 @@ main>div>form>fieldset>input[type="submit"], main>div:first-of-type>form>fieldse
 
 
 /*remove button*/
-#checkout button, #search button, #user button, #admin button{
+#checkout article>section>button, #search article>section>button, #user article>section>button, #admin article>section>button{
     grid-area: button;
     width: 80%;
     height: 80%;
@@ -288,7 +324,7 @@ main>div>form>fieldset>input[type="submit"], main>div:first-of-type>form>fieldse
 }
 
 /*Admin sections*/
-#admin section{
+#admin div>section{
     display: grid;
     grid-template-areas:
         "img title title"
@@ -304,12 +340,12 @@ main>div>form>fieldset>input[type="submit"], main>div:first-of-type>form>fieldse
 }
 
 /*Remove button products*/
-#admin section>button:first-of-type{
+#admin div>section>button:first-of-type{
     grid-area: remove;
 }
 
 /*Edit button products*/
-#admin section>button:last-of-type{
+#admin div>section>button:last-of-type{
     grid-area: edit;
 }
 
@@ -443,7 +479,9 @@ main>div>form>fieldset>input[type="submit"], main>div:first-of-type>form>fieldse
 
     /*Navbar*/
     nav{
-        grid-template-areas: "logo search cart";
+        grid-template-areas: 
+        "logo search cart"
+        "category category category";
     }
 
     /*Logo*/

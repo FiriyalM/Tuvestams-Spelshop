@@ -23,57 +23,32 @@
         <a href="./checkout.html">
             <img src="../images/cart.png" alt="cart">
         </a>
+        <section>
+            <button value="PC">PC</button>
+            <button value="XBOX">XBOX</button>
+            <button value="PS5">PS5</button>
+            <button value="NINTENDO">NINTENDO</button>
+        </section>
     </nav>
     <main>
         <article>
             <h1>Produkter</h1>
-            <form>
+            <form id="searchProduct" onsubmit="return false">
                 <fieldset>
-                    <input type="search">
+                    <input type="search" name="searchBar">
                     <input type="submit" value="Sök">
                 </fieldset>
             </form>
 
-            <div>
-                <section>
-                    <img src="../images/raider.jpg">
-                    <h2>Game Title</h2>
-                    <h2>PC</h2>
-                    <h2>600 Kr</h2>
-                    <button>Ta bort</button>
-                    <button>Ändra</button>
-                </section>
-                <section>
-                    <img src="../images/raider.jpg">
-                    <h2>Game Title</h2>
-                    <h2>PC</h2>
-                    <h2>600 Kr</h2>
-                    <button>Ta bort</button>
-                    <button>Ändra</button>
-                </section>
-                <section>
-                    <img src="../images/raider.jpg">
-                    <h2>Game Title</h2>
-                    <h2>PC</h2>
-                    <h2>600 Kr</h2>
-                    <button>Ta bort</button>
-                    <button>Ändra</button>
-                </section>
-                <section>
-                    <img src="../images/raider.jpg">
-                    <h2>Game Title</h2>
-                    <h2>PC</h2>
-                    <h2>600 Kr</h2>
-                    <button>Ta bort</button>
-                    <button>Ändra</button>
-                </section>
+            <div id="productsContainer"><!--Contains the searched for products-->
+                
             </div>
         </article>
         <article id="users">
             <h1>Användare</h1>
-            <form>
+            <form id="searchUser"  onsubmit="return false">
                 <fieldset>
-                    <input type="search">
+                    <input type="search" name="searchBar">
                     <input type="submit" value="Sök">
                 </fieldset>
             </form>

@@ -1,8 +1,10 @@
 /*Jesper Jensen*/
-var searchForm;
+var searchForm;  //Reference to website search bar
 var logInForm; //Reference to log in form
 var createAccForm; //Reference to create account form
 var updateAccForm; //Referece to update account form - user page
+var searchProductForm;  //Reference to the search product form - admin page
+var searchUserForm;  //Reference to the search user form - admin page
 var userInfo; //Hold user info from getUserInformation
 
 window.onload = init;
@@ -10,6 +12,13 @@ window.onload = init;
 function init(){
     searchForm = document.getElementById("searchForm");  //Saves reference to the search bar (form)
     searchForm.addEventListener("submit", searchProduct);
+
+    let nav = document.querySelector("nav");  //Reference to the nav bar
+    let buttons = nav.querySelectorAll("section button");  //Reference to the category buttons
+
+    for(let i = 0; i < buttons.length; i++){
+        buttons[i].onclick = searchConsoleType;  //Assign the buttons to the searchConsleType function
+    }
 
     //All pages that has logIn/Create Account form
     if(document.querySelector("body").getAttribute("id") === "index" || document.querySelector("body").getAttribute("id") === "search" || document.querySelector("body").getAttribute("id") === "product"){
@@ -77,6 +86,8 @@ function init(){
 
             let products = getCartItems(cart);  //Get the products in the cart as objects
 
+            console.log(products);
+
             for(let i = 0; i < amount; i++){  //Create the product sections
                 createProductSection(products[i].productId, products[i].productName, products[i].consoleType, products[i].price, products[i].imgPath);
             }
@@ -86,6 +97,14 @@ function init(){
         }else{  //If the cart is empty
             document.getElementById("order").style.display = "none";  //Hide order button
         }
+    }
+
+    //If admin page
+    if(document.querySelector("body").getAttribute("id") === "admin"){
+        searchProductForm = document.getElementById("searchProduct");
+        searchUserForm = document.getElementById("searchUser");
+
+        searchProductForm.addEventListener("submit", searchProduct);
     }
 }
 
@@ -415,6 +434,20 @@ function createProductSection(productId, productName, console, price, imgPath){
         btn.innerHTML = "Lägg till";  //Changes button text
     }
 
+    if(document.querySelector("body").getAttribute("id") === "admin"){ //If admin page
+        let btn2 = document.createElement("button");
+
+        btn.innerHTML = "Ta bort";
+
+        btn2.innerHTML = "Ändra";
+        btn2.setAttribute("value", productId);
+
+        btn.onclick = deleteProduct;
+        btn2.onclick = changeProduct;
+
+        sec.append(btn2);
+    }
+
     img.setAttribute("src", imgPath);
     titleH2.innerHTML = productName;
     consoleH2.innerHTML = console;
@@ -427,7 +460,11 @@ function createProductSection(productId, productName, console, price, imgPath){
     sec.append(priceH2);
     sec.append(btn);
 
-    document.querySelector("article").append(sec);
+    if(document.querySelector("body").getAttribute("id") === "admin"){  //If not admin page
+        document.getElementById("productsContainer").append(sec);
+    }else{
+        document.querySelector("article").append(sec);
+    }
 }
 
 /**
@@ -465,15 +502,15 @@ function removeProductFromCart(){
  * If the item(s) exists returns and saves the result in session storage "searchResults" 
  */
 async function searchProduct(){
-    let searchValue = searchForm.searchBar.value.trim();
+    let searchValue = event.target.searchBar.value.trim();
 
     let productData = {
         'productName': searchValue
     };
 
-    await fetch("http://its.teknikum.it:8080/tuvestams-spel-shop/resources/product/search/ProductName", {
+    await fetch("http://its.teknikum.it:8080/tuvestams-spel-shop/resources/product/search/productName", {
         method: "GET",
-        mode: 'cors',
+        mode: 'no-cors',
         headers: {
             'productName': JSON.stringify(productData)  
         },
@@ -487,11 +524,33 @@ async function searchProduct(){
             console.error(err);          
         });
         
-    if(document.querySelector("body").getAttribute("id") === "index"){  //Different url from index
-        location.replace("./pages/search.html");
+    if(document.querySelector("body").getAttribute("id") !== "admin"){
+        if(document.querySelector("body").getAttribute("id") === "index"){  //Different url from index
+            location.replace("./pages/search.html");
+        }else{
+            location.replace("./search.html");
+        }
     }else{
-        location.replace("./search.html");
+        let container = document.getElementById("productsContainer");  //Saves reference to the productContainer where the products are created
+
+        while(container.firstChild){  //While the container has children (Previous search), remove until empty
+            container.removeChild(container.lastChild);  //Remove last child
+        }
+
+        if(sessionStorage.getItem("searchResults") !== null){  //If there are results
+            let products = JSON.parse(sessionStorage.getItem("searchResults"));  //Parse the JSON string to json objects
+            let amountOfProducts = Object.keys(products).length;  //Count the amount of objects
+
+            for(let i = 0; i < amountOfProducts; i++){  //Create the product sections
+                createProductSection(products[i].productId, products[i].productName, products[i].consoleType, products[i].price, products[i].imgPath);
+            }
+
+            sessionStorage.removeItem("searchResults");
+        }else{
+            alert("Din sökning gav inga resultat");
+        }
     }
+
 }
     
 /**
@@ -503,7 +562,7 @@ async function searchProduct(){
 async function getCartItems(items){
     let products;  //Holds the cart products
 
-    await fetch("http://its.teknikum.it:8080/tuvestams-spel-shop/resources/product/search/ProductName", {
+    await fetch("http://its.teknikum.it:8080/tuvestams-spel-shop/resources/product/search/productName", {
         method: "GET",
         mode: 'no-cors',
         headers: {
@@ -514,6 +573,7 @@ async function getCartItems(items){
 
             return response.json();
         }).then(data =>{
+            console.log(data);
             products = data;
         }).catch(err => {
             console.error(err);
@@ -571,4 +631,42 @@ async function createOrder(){
     }).catch(err =>{
         console.error(err);
     });
+}
+
+function changeProduct(){
+
+}
+
+function deleteProduct(){
+    
+}
+
+async function searchConsoleType(){
+    let searchedConsole = event.target.value;
+
+    let consoleType = {
+        'consoleType': searchedConsole
+    }
+
+    await fetch("http://its.teknikum.it:8080/tuvestams-spel-shop/resources/product/search/consoleType", {
+        method: "GET",
+        mode: 'no-cors',
+        headers: {
+            'ConsoleType': consoleType
+        },
+        }).then((response) => {
+            console.log("Status : " + response.status);
+
+            return response.json();
+        }).then(data =>{
+            sessionStorage.setItem("searchResults", JSON.stringify(data));  //Add the products to searchResults
+        }).catch(err => {
+            console.error(err);
+    });
+
+    if(document.querySelector("body").getAttribute("id") === "index"){  //Different url from index
+        location.replace("./pages/search.html");
+    }else{
+        location.replace("./search.html");
+    }
 }
