@@ -502,7 +502,7 @@ function removeProductFromCart(){
  * If the item(s) exists returns and saves the result in session storage "searchResults" 
  */
 async function searchProduct(){
-    let searchValue = searchForm.searchBar.value.trim();
+    let searchValue = event.target.searchBar.value.trim();
 
     let productData = {
         'productName': searchValue
