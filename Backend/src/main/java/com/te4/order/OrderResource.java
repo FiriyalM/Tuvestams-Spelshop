@@ -6,9 +6,12 @@
 package com.te4.order;
 
 import com.google.gson.Gson;
+import java.util.List;
+import com.te4.user.User;
 import javax.ejb.EJB;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -26,6 +29,24 @@ public class OrderResource {
     @EJB
     OrderBean orderBean;
     
+    
+    @GET
+    public Response showOrder(@HeaderParam("userName") String userName){
+        Gson gson = new Gson();
+        User user = gson.fromJson(userName, User.class);
+        
+        List<Object> newOrder = orderBean.showOrder(user);
+        
+        if(newOrder == null){
+            return Response.status(Response.Status.NO_CONTENT).build();
+        }else if(newOrder.isEmpty()){
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }else{
+           return Response.ok(newOrder).build();
+        }
+    }
+    
+    
     /**
      * den här metoden skapar en ny order
      * den tar emot informationen på detta viset
@@ -41,7 +62,7 @@ public class OrderResource {
         Gson gson = new Gson();
         Order order = gson.fromJson(orderData, Order.class);
         if(orderBean.createOrder(order) == 1){
-           return Response.ok().header("Access-Control-Allow-Origin","*").build();
+           return Response.ok().build();
         }else{
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
@@ -57,7 +78,7 @@ public class OrderResource {
         Gson gson = new Gson();
         Order order = gson.fromJson(orderId, Order.class);
         if(orderBean.deleteOrder(order) == 1){
-           return Response.ok().header("Access-Control-Allow-Origin","*").build();
+           return Response.ok().build();
         }else{
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
@@ -78,7 +99,7 @@ public class OrderResource {
         Gson gson = new Gson();
         Order order = gson.fromJson(orderData, Order.class);
         if(orderBean.updateOrder(order) == 1){
-           return Response.ok().header("Access-Control-Allow-Origin","*").build();
+           return Response.ok().build();
         }else{
             return Response.status(Response.Status.BAD_REQUEST).build();
         }

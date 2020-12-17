@@ -48,7 +48,7 @@ public class ProductResource {
         }else if(newProduct.isEmpty()){
             return Response.status(Response.Status.BAD_REQUEST).build();
         }else{
-           return Response.ok(newProduct).header("Access-Control-Allow-Origin","*").build();
+           return Response.ok(newProduct).build();
         }
     }
     
@@ -68,11 +68,11 @@ public class ProductResource {
             List<Product> newProduct = productBean.searchProductByProductName(product);
 
             if(newProduct == null){
-                return Response.status(Response.Status.NO_CONTENT).build();
-            }else if(newProduct.isEmpty()){
                 return Response.status(Response.Status.BAD_REQUEST).build();
+            }else if(newProduct.isEmpty()){
+                return Response.status(Response.Status.NO_CONTENT).build();
             }else{
-               return Response.ok(newProduct).header("Access-Control-Allow-Origin","*").build();
+               return Response.ok(newProduct).build();
             }
         }else{
            String[] productId = productName.split(",");
@@ -80,7 +80,6 @@ public class ProductResource {
             for (int i = 0; i < productId.length; i++) {
                 product.add(productBean.showProduct(Integer.parseInt(productId[i])));
             }
-            
            return Response.ok(product).build();
         }    
     }
@@ -103,7 +102,7 @@ public class ProductResource {
         Product product = gson.fromJson(productData, Product.class);
         
         if(productBean.addProduct(product) == 1){
-           return Response.ok().header("Access-Control-Allow-Origin","*").build();
+           return Response.ok().build();
         }else{
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
@@ -121,7 +120,7 @@ public class ProductResource {
         Product product = gson.fromJson(productId, Product.class);
         
         if(productBean.deleteProduct(product) == 1){
-           return Response.ok().header("Access-Control-Allow-Origin","*").build();
+           return Response.ok().build();
         }else{
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
@@ -146,7 +145,7 @@ public class ProductResource {
         Product product = gson.fromJson(productData, Product.class);
         
         if(productBean.updateProduct(product) == 1){
-           return Response.ok().header("Access-Control-Allow-Origin","*").build();
+           return Response.ok().build();
         }else{
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
