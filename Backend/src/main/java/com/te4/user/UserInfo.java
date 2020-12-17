@@ -18,6 +18,14 @@ public class UserInfo {
     private int zipCode;
     private String phoneNumber;
 
+    public UserInfo(String email, String address, String city, int zipCode, String phoneNumber) {
+        this.email = email;
+        this.address = address;
+        this.city = city;
+        this.zipCode = zipCode;
+        this.phoneNumber = phoneNumber;
+    }
+    
     public UserInfo(String userName, String email, String adress, String city, int zipCode, String phoneNumber) {
         this.userName = userName;
         this.email = email;

@@ -7,6 +7,8 @@ package com.te4.order;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import com.te4.backend.ConnectionFactory;
+import com.te4.user.User;
+import com.te4.user.UserInfo;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -86,30 +88,49 @@ public class OrderBean {
      * den roppars när man gör en fetch från http://localhost:8080/Backend/resources/product , Method GET 
      * metoden Söker efter order med hjälp av !!
      * */
-    public List<Order> showOrder (Order order){
-        List<Order> orderData = new ArrayList<Order>();
+    public List<Object> showOrder (User user){
+        List<Object> orderData = new ArrayList<>();
         try (Connection con = ConnectionFactory.getConnection()){
-           String createProduct = "";
-            PreparedStatement stmt = con.prepareStatement(createProduct);
+            
+           String showOrders = "SELECT "
+                   + "(ORDER.customerNumber), "
+                   + "(ORDER.orderId), "
+                   + "(ORDER.productId), "
+                   + "(ORDER.amountPurchased), "
+                   + "(ORDER.purchaseDate) "
+                   + "FROM `order` JOIN `userInfo` ON(ORDER.customerNumber) =(userinfo.customerNumber) WHERE `userName` =? ";
+           
+            PreparedStatement stmt = con.prepareStatement(showOrders);
+            stmt.setString(1, user.getUserName());
             ResultSet data = stmt.executeQuery();
+            
             while(data.next()){
+                int customerNumber = data.getInt("customerNumber");
+                int orderId = data.getInt("orderId");
+                int productId = data.getInt("productId");
+                int amountPurchased = data.getInt("amountPurchased");
+                String purchaseDate = data.getString("purchaseDate");
                 
-                
-                //Order newOrder = new Order();
-                
-                //orderData.add(newOrder);
-                /*int productId = data.getInt("productId");
-                String productName = data.getString("productName");
-                String consoleType = data.getString("consoleType");
-                String info = data.getString("info");
-                String price = data.getString("price");
-                String imgPath = data.getString("imgPath");
-                int amountInStock = data.getInt("amountInStock");
-                
-                Product newProduct = new Product(productId,productName,consoleType,info,price,imgPath,amountInStock);
-                
-                productData.add(newProduct);*/
+                Order newOrder = new Order(customerNumber, orderId, productId, amountPurchased, purchaseDate);
+                orderData.add(newOrder);
             }
+            
+            String getUserInfo = "SELECT `email`, `phoneNumber`, `address`, `zipCode`, `city` FROM `userInfo` WHERE `userName`=?";
+            stmt = con.prepareStatement(getUserInfo);
+            stmt.setString(1, user.getUserName());
+            data = stmt.executeQuery();
+            
+            data.next();
+            
+            String email = data.getString("email");
+            String phoneNumber = data.getString("phoneNumber");
+            String addres = data.getString("address");
+            int zipCode = data.getInt("zipCode");
+            String city = data.getString("city");
+            
+            UserInfo userInfo = new UserInfo(email,addres,city, zipCode, phoneNumber);
+            orderData.add(userInfo);
+            
             return orderData;
         } catch (Exception e) {
            System.out.println("Error OrderBean.showOrder: " +e.getMessage());

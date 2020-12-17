@@ -16,6 +16,7 @@ import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -31,11 +32,12 @@ public class ProductResource {
     
     /**
      * med den här metoden söker man efter producten med hjälp av consoleType
-     * den tar emot införmationen på detta viset {"consoleType":"PC"}
+     * den tar emot informationen på detta viset {"consoleType":"PC"}
      * */
     @GET
     @Path("search/consoleType")
-    public Response searchConsoleType(@HeaderParam("ConsoleType")String consoleType){
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response searchConsoleType(@HeaderParam("consoleType")String consoleType){
         Gson gson = new Gson();
         Product product = gson.fromJson(consoleType, Product.class);
         
@@ -46,7 +48,7 @@ public class ProductResource {
         }else if(newProduct.isEmpty()){
             return Response.status(Response.Status.BAD_REQUEST).build();
         }else{
-           return Response.ok(newProduct).header("Access-Control-Allow-Origin","*").build();
+           return Response.ok(newProduct).build();
         }
     }
     
@@ -56,6 +58,7 @@ public class ProductResource {
      * */
     @GET
     @Path("search/productName")
+    @Produces(MediaType.APPLICATION_JSON)
     public Response searchProduct(@HeaderParam("productName")String productName){
         if(productName.charAt(0) == '{'){
             
@@ -65,20 +68,18 @@ public class ProductResource {
             List<Product> newProduct = productBean.searchProductByProductName(product);
 
             if(newProduct == null){
-                return Response.status(Response.Status.NO_CONTENT).build();
-            }else if(newProduct.isEmpty()){
                 return Response.status(Response.Status.BAD_REQUEST).build();
+            }else if(newProduct.isEmpty()){
+                return Response.status(Response.Status.NO_CONTENT).build();
             }else{
-               return Response.ok(newProduct).header("Access-Control-Allow-Origin","*").build();
+               return Response.ok(newProduct).build();
             }
         }else{
            String[] productId = productName.split(",");
            List<Product> product = new ArrayList<Product>();
             for (int i = 0; i < productId.length; i++) {
-                System.out.println(productId[i]);
                 product.add(productBean.showProduct(Integer.parseInt(productId[i])));
             }
-            
            return Response.ok(product).build();
         }    
     }
@@ -101,7 +102,7 @@ public class ProductResource {
         Product product = gson.fromJson(productData, Product.class);
         
         if(productBean.addProduct(product) == 1){
-           return Response.ok().header("Access-Control-Allow-Origin","*").build();
+           return Response.ok().build();
         }else{
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
@@ -119,7 +120,7 @@ public class ProductResource {
         Product product = gson.fromJson(productId, Product.class);
         
         if(productBean.deleteProduct(product) == 1){
-           return Response.ok().header("Access-Control-Allow-Origin","*").build();
+           return Response.ok().build();
         }else{
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
@@ -144,7 +145,7 @@ public class ProductResource {
         Product product = gson.fromJson(productData, Product.class);
         
         if(productBean.updateProduct(product) == 1){
-           return Response.ok().header("Access-Control-Allow-Origin","*").build();
+           return Response.ok().build();
         }else{
             return Response.status(Response.Status.BAD_REQUEST).build();
         }

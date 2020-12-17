@@ -63,7 +63,7 @@ public class UserResource {
         UserInfo userInfo = gson.fromJson(userData, UserInfo.class);
         
         if(userBean.saveUser(user, userInfo) == 2){
-           return Response.ok().header("Access-Control-Allow-Origin","*").build();
+           return Response.ok().build();
         }else{
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
@@ -81,7 +81,7 @@ public class UserResource {
         User user = gson.fromJson(userData, User.class);
         
         if(userBean.changepassword(user) == 1){
-           return Response.ok().header("Access-Control-Allow-Origin","*").build();
+           return Response.ok().build();
         }else{
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
@@ -108,7 +108,7 @@ public class UserResource {
         UserInfo userInfo = gson.fromJson(userData, UserInfo.class);
         
         if(userBean.changeUserData(user, userInfo) == 2){
-           return Response.ok().header("Access-Control-Allow-Origin","*").build();
+           return Response.ok().build();
         }else{
             return Response.status(Response.Status.BAD_REQUEST).build();
         }

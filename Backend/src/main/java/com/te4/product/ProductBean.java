@@ -98,14 +98,24 @@ public class ProductBean {
      public List<Product> searchProductByProductName(Product product){
          
           List<Product> productData = new ArrayList<Product>();
+          int sad;
+          
+         try{
+             sad = Integer.parseInt(product.getProductName());
+             System.out.println("rätt" + sad);
+         } catch (Exception e) {
+             sad = 0; 
+             System.out.println("fel");
+         }
+          
           
          try (Connection con = ConnectionFactory.getConnection()){
              
-           String createProduct = "SELECT * FROM `product` WHERE productName=? OR productId =?";
+           String createProduct = "SELECT * FROM `product` WHERE productName LIKE ? OR productId =?";
            
             PreparedStatement stmt = con.prepareStatement(createProduct);
-            stmt.setString(1, product.getProductName());
-            stmt.setInt(2, product.getProductId());
+            stmt.setString(1, "%" + product.getProductName() + "%");
+            stmt.setInt(2, sad);
             ResultSet data = stmt.executeQuery();
             while(data.next()){
                 int productId = data.getInt("productId");
