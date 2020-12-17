@@ -9,7 +9,7 @@ var userInfo; //Hold user info from getUserInformation
 
 window.onload = init;
 
-function init(){
+async function init(){
     searchForm = document.getElementById("searchForm");  //Saves reference to the search bar (form)
     searchForm.addEventListener("submit", searchProduct);
 
@@ -84,15 +84,13 @@ function init(){
                 }
             }
 
-            let products = getCartItems(cart);  //Get the products in the cart as objects
-
-            console.log(products);
-
+            let products = await getCartItems(cart);  //Get the products in the cart as objects
+            
             for(let i = 0; i < amount; i++){  //Create the product sections
                 createProductSection(products[i].productId, products[i].productName, products[i].consoleType, products[i].price, products[i].imgPath);
             }
-
-            document.getElementById("order").style.display = "inherit";  //Show order button
+            
+            document.getElementById("order").style.display = "initial";  //Show order button
             document.getElementById("order").onclick = createOrder;  //Assigns the button to the createOrder function
         }else{  //If the cart is empty
             document.getElementById("order").style.display = "none";  //Hide order button
@@ -105,6 +103,13 @@ function init(){
         searchUserForm = document.getElementById("searchUser");
 
         searchProductForm.addEventListener("submit", searchProduct);
+    }
+
+    //If product page
+    if(document.querySelector("body").getAttribute("id") === "product"){
+        console.log(sessionStorage.getItem("product"));
+        getProduct();
+        sessionStorage.removeItem("product");
     }
 }
 
@@ -419,7 +424,8 @@ function testRegex(reg, input, css){
  */
 function createProductSection(productId, productName, console, price, imgPath){
     let sec = document.createElement("section");  //Product container
-    let img = document.createElement("img");  //Link to img
+    let img = document.createElement("img");  //Path to img
+    let link = document.createElement("a");  //Link to product page
     let titleH2 = document.createElement("h2");  //Game title
     let priceH2 = document.createElement("h2");  //Game price
     let consoleH2 = document.createElement("h2"); //Game console
@@ -448,22 +454,27 @@ function createProductSection(productId, productName, console, price, imgPath){
         sec.append(btn2);
     }
 
+    link.setAttribute("href", "./product.html");
     img.setAttribute("src", imgPath);
     titleH2.innerHTML = productName;
     consoleH2.innerHTML = console;
     priceH2.innerHTML = price + " kr";
     btn.setAttribute("value", productId);
 
+    link.onclick = sessionStorage.setItem("product", productId);
+    link.append(titleH2);  //Makes the title a link
+
+    /* Adds the elements to the section */
     sec.append(img);
-    sec.append(titleH2);
+    sec.append(link);
     sec.append(consoleH2);
     sec.append(priceH2);
     sec.append(btn);
 
-    if(document.querySelector("body").getAttribute("id") === "admin"){  //If not admin page
-        document.getElementById("productsContainer").append(sec);
-    }else{
-        document.querySelector("article").append(sec);
+    if(document.querySelector("body").getAttribute("id") === "admin"){  //If admin page
+        document.getElementById("productsContainer").append(sec);  //Add the section to the productsContainer
+    }else{ //If not admin page
+        document.querySelector("article").append(sec);  //Add the sectino to the article
     }
 }
 
@@ -510,7 +521,7 @@ async function searchProduct(){
 
     await fetch("http://its.teknikum.it:8080/tuvestams-spel-shop/resources/product/search/productName", {
         method: "GET",
-        mode: 'no-cors',
+        mode: 'cors',
         headers: {
             'productName': JSON.stringify(productData)  
         },
@@ -564,7 +575,7 @@ async function getCartItems(items){
 
     await fetch("http://its.teknikum.it:8080/tuvestams-spel-shop/resources/product/search/productName", {
         method: "GET",
-        mode: 'no-cors',
+        mode: 'cors',
         headers: {
             'productName': items  
         },
@@ -573,13 +584,12 @@ async function getCartItems(items){
 
             return response.json();
         }).then(data =>{
-            console.log(data);
             products = data;
         }).catch(err => {
             console.error(err);
     });
 
-    return products;
+    return products
 }
 
 /**
@@ -610,6 +620,8 @@ async function createOrder(){
     for(let i = 0; i < Object.keys(amount).length; i++){  //Creates the jsons string
         products += "{'userName': " + userName + ", 'productId': " + Object.keys(amount)[i] + ", 'amountPurchased': " + amount[Object.keys(amount)[i]] + ", 'purchaseDate': " + fullDate + "},";
     }
+
+    console.log(products);
 
     await fetch("http://its.teknikum.it:8080/tuvestams-spel-shop/resources/order", {
         method: "POST",
@@ -664,13 +676,13 @@ async function searchConsoleType(){
 
     let consoleType = {
         'consoleType': searchedConsole
-    }
+    };
 
     await fetch("http://its.teknikum.it:8080/tuvestams-spel-shop/resources/product/search/consoleType", {
         method: "GET",
-        mode: 'no-cors',
+        mode: 'cors',
         headers: {
-            'consoleType': consoleType
+            'consoleType': JSON.stringify(consoleType)
         },
         }).then((response) => {
             console.log("Status : " + response.status);
@@ -686,5 +698,51 @@ async function searchConsoleType(){
         location.replace("./pages/search.html");
     }else{
         location.replace("./search.html");
+    }
+}
+
+async function getProduct(){
+    let product;  //Holds the product 
+
+    let productId = {
+        'productName': sessionStorage.getItem("product")
+    };
+
+    await fetch("http://its.teknikum.it:8080/tuvestams-spel-shop/resources/product/search/productName", {
+        method: "GET",
+        mode: 'cors',
+        headers: {
+            'productName': JSON.stringify(productId)
+        },
+        }).then((response) => {
+            console.log("Status : " + response.status);
+
+            return response.json();
+        }).then(data =>{
+            console.log(data);
+            product = data;  //save the product
+        }).catch(err => {
+            console.error(err);
+    });
+
+    let title = document.getElementById("title");  //Game title h2
+    let info = document.getElementById("info");  //Game info p
+    let consoleType = document.getElementById("consoleType");  //Console type h2
+    let stock = document.getElementById("stock");  //Games left h2
+    let price = document.getElementById("price");  //Game price h2
+    let btn = document.getElementById("addBtn");  //Add product button
+
+    /* Assign the values to the respectiv element */
+    title.innerHTML = product[0].productName;
+    info.innerHTML = product[0].info;
+    consoleType.innerHTML = product[0].consoleType;
+    stock.innerHTML = product[0].amountInStock + " Kvar";
+    price.innerHTML = product[0].price + " Kr";
+    btn.setAttribute("value", product[0].productId);
+
+    if(product.amount < 1){
+        btn.style.disabled = true;
+    }else{
+        btn.onclick = addProductToCart;
     }
 }

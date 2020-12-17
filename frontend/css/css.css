@@ -184,6 +184,7 @@ main>div>form>fieldset>input[type="submit"], main>div:first-of-type>form>fieldse
     height: auto;
     overflow: visible;
     padding: 15px;
+    box-sizing: border-box;
 }
 
 #search article{
@@ -258,21 +259,25 @@ main>div>form>fieldset>input[type="submit"], main>div:first-of-type>form>fieldse
 }
 
 /*price*/
-#checkout h2:last-of-type, #search h2:last-of-type, #user h2:last-of-type, #admin h2:last-of-type{
+#checkout section>h2:last-of-type, #search section>h2:last-of-type, #user section>h2:last-of-type, #admin section>h2:last-of-type{
     grid-area: price;
 }
 
 /*title*/
-#checkout h2:first-of-type, #search h2:first-of-type, #user h2:first-of-type, #admin h2:first-of-type{
+#checkout section>a, #search section>a, #user section>a, #admin section>a, #user section>h2:first-of-type{
     grid-area: title;
     white-space: normal;
 }
 
 /*console type + general h2*/
-#checkout h2, #search h2, #user h2, #admin h2{
+#checkout section>h2, #search section>h2, #user section>h2, #admin section>h2{
     text-align: center;
 }
 
+/*Link centered*/
+#checkout section>a, #search section>a, #user section>a, #admin section>a{
+    text-align: center;
+}
 
 /*remove button*/
 #checkout article>section>button, #search article>section>button, #user article>section>button, #admin article>section>button{
@@ -295,6 +300,7 @@ main>div>form>fieldset>input[type="submit"], main>div:first-of-type>form>fieldse
     height: 50px;
     font-size: 1.4em;
     margin-bottom: 15px;
+    margin: auto;
 }
 
 /*Containers*/
@@ -508,7 +514,7 @@ main>div>form>fieldset>input[type="submit"], main>div:first-of-type>form>fieldse
     }
 
     #product article{
-        height: 250px;
+        height: auto;
     }    
 
     /*game image*/
