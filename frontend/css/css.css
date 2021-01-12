@@ -61,7 +61,7 @@ article>section{
 }
 
 /*Poster images*/
-#index article>section> img{
+#index article>section>img, #index article>section>a>img{
     width: 100%;
 }
 
@@ -94,9 +94,10 @@ input{
 
 /*Form input*/
 fieldset>input{
-    height: 50px;
+    min-height: 50px;
     font-size: 1.4em;
     padding-left: 5px;
+    white-space: normal;
 }
 
 /*Search bar form*/

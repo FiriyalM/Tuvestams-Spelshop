@@ -449,19 +449,21 @@ function createProductSection(productId, productName, console, price, imgPath){
         btn2.setAttribute("value", productId);
 
         btn.onclick = deleteProduct;
-        btn2.onclick = changeProduct;
+        btn2.onclick = fillEditForm;
 
         sec.append(btn2);
     }
 
-    link.setAttribute("href", "./product.html");
-    img.setAttribute("src", imgPath);
-    titleH2.innerHTML = productName;
-    consoleH2.innerHTML = console;
-    priceH2.innerHTML = price + " kr";
-    btn.setAttribute("value", productId);
+    link.setAttribute("href", "./product.html");  //Set link path
+    img.setAttribute("src", imgPath);  //Set img path
+    titleH2.innerHTML = productName;  //Set game title
+    consoleH2.innerHTML = console;  //Set console type
+    priceH2.innerHTML = price + " kr";  //Set price
+    btn.setAttribute("value", productId);  //Set product id the on button
 
-    link.onclick = sessionStorage.setItem("product", productId);
+    link.addEventListener("click", () => {  //When the link is clicked
+        sessionStorage.setItem("product", productId)  //Sets id on click
+    });
     link.append(titleH2);  //Makes the title a link
 
     /* Adds the elements to the section */
@@ -608,7 +610,7 @@ async function createOrder(){
 
     let fullDate = year + "-" + month + "-" + day;  //Date format
     let userName = sessionStorage.getItem("userName");  //Logged in user
-    let products = "";  //Holds the products orderes "{json},{json},{json}" as a string
+    let products = [];  //Holds the products orders "{json},{json},{json}"
     let amount = {};  //Holds the amount of each item ordered
     let ids = sessionStorage.getItem("cart").slice(0, -1).split(",");  //Slices removes last ",". Split splits the order ids into an array
 
@@ -617,8 +619,8 @@ async function createOrder(){
         amount[num] = amount[num] ? amount[num] + 1 : 1;  //Adds the amount of each item in amount
     }
 
-    for(let i = 0; i < Object.keys(amount).length; i++){  //Creates the jsons string
-        products += "{'userName': " + userName + ", 'productId': " + Object.keys(amount)[i] + ", 'amountPurchased': " + amount[Object.keys(amount)[i]] + ", 'purchaseDate': " + fullDate + "},";
+    for(let i = 0; i < Object.keys(amount).length; i++){  //Creates the jsons string and parses into object. Adds the object to an array
+        products.push(JSON.parse('{"userName":"' + userName + '","productId":' + Object.keys(amount)[i] + ',"amountPurchased":' + amount[Object.keys(amount)[i]] + ',"purchaseDate":"' + fullDate + '"}'));
     }
 
     console.log(products);
@@ -642,6 +644,24 @@ async function createOrder(){
         return response.json();
     }).catch(err =>{
         console.error(err);
+    });
+}
+
+async function getOrders(){
+    await fetch("http://its.teknikum.it:8080/tuvestams-spel-shop/resources/order", {
+        method: "GET",
+        mode: 'cors',
+        headers: {
+            'consoleType': JSON.stringify(consoleType)
+        },
+        }).then((response) => {
+            console.log("Status : " + response.status);
+
+            return response.json();
+        }).then(data =>{
+            sessionStorage.setItem("searchResults", JSON.stringify(data));  //Add the products to searchResults
+        }).catch(err => {
+            console.error(err);
     });
 }
 
@@ -717,7 +737,8 @@ async function getProduct(){
         }).then((response) => {
             console.log("Status : " + response.status);
 
-            return response.json();
+            const productInfo = response.json();
+            return productInfo;
         }).then(data =>{
             console.log(data);
             product = data;  //save the product
@@ -725,24 +746,82 @@ async function getProduct(){
             console.error(err);
     });
 
-    let title = document.getElementById("title");  //Game title h2
-    let info = document.getElementById("info");  //Game info p
-    let consoleType = document.getElementById("consoleType");  //Console type h2
-    let stock = document.getElementById("stock");  //Games left h2
-    let price = document.getElementById("price");  //Game price h2
-    let btn = document.getElementById("addBtn");  //Add product button
-
-    /* Assign the values to the respectiv element */
-    title.innerHTML = product[0].productName;
-    info.innerHTML = product[0].info;
-    consoleType.innerHTML = product[0].consoleType;
-    stock.innerHTML = product[0].amountInStock + " Kvar";
-    price.innerHTML = product[0].price + " Kr";
-    btn.setAttribute("value", product[0].productId);
-
-    if(product.amount < 1){
-        btn.style.disabled = true;
+    if(document.querySelector("body").getAttribute("id") === "product"){
+        let title = document.getElementById("title");  //Game title h2
+        let info = document.getElementById("info");  //Game info p
+        let consoleType = document.getElementById("consoleType");  //Console type h2
+        let stock = document.getElementById("stock");  //Games left h2
+        let price = document.getElementById("price");  //Game price h2
+        let btn = document.getElementById("addBtn");  //Add product button
+    
+        /* Assign the values to the respectiv element */
+        title.innerHTML = product[0].productName;
+        info.innerHTML = product[0].info;
+        consoleType.innerHTML = product[0].consoleType;
+        stock.innerHTML = product[0].amountInStock + " Kvar";
+        price.innerHTML = product[0].price + " Kr";
+        btn.setAttribute("value", product[0].productId);
+    
+        if(product.amount < 1){
+            btn.style.disabled = true;
+        }else{
+            btn.onclick = addProductToCart;
+        }
     }else{
-        btn.onclick = addProductToCart;
+        return product;
     }
+}
+
+function createOrderSection(){
+    let totalPrice = 0;  //Total price of order
+
+    let article = document.createElement("article");  //Order container
+
+    let orderNumber = document.createElement("h1");  //Order number container
+    orderNumber.innerHTML = "Order #" + /*Order number here*/"";  //Set order number
+    article.append(orderNumber);  //Add order number to the article
+
+    let sections = [];  //Products container
+    for(let i = 0; i < /*amountOfDifferentProducts*/1; i++){
+        sections[i] = document.createElement("section");
+
+        let title = document.createElement("h2");  //Title elem
+        let console = document.createElement("h2");  //Console elem
+        let price = document.createElement("h2");  //Price elem
+
+        totalPrice += price;
+
+        title.innerHTML = /*Title here*/"";  //Set title
+        console.innerHTML = /*ConsoleType here*/"";  //Set console type
+        price.innerHTML = /*Price here*/"kr";  //Set price
+
+        sections[i].append(title);  //Add title to section
+        sections[i].append(console);  //Add console type to section
+        sections[i].append(price);  //Add price to section
+
+        article.append(sections[i]);  //Add the section to the article
+    }
+
+    let total = document.createElement("h1");  //Total price elem
+    total.innerHTML = "Totalt: " + totalPrice + "kr";  //Set total price
+
+    document.getElementById("orders").append(article); //Add the order to orders
+}
+
+function fillEditForm(){
+    sessionStorage.setItem("product", event.target.value);
+    
+    let form = document.getElementById("changeAddForm");
+
+    getProduct().then(productInfo => {
+        sessionStorage.removeItem("product");
+    
+        form.name.value = productInfo[0].productName;
+        form.consoleType.value = productInfo[0].consoleType;
+        form.info.value = productInfo[0].info;
+        form.price.value = productInfo[0].price;
+        form.imagePath.value = productInfo[0].imagePath;
+        form.amount.value = productInfo[0].amountInStock;
+    });
+
 }

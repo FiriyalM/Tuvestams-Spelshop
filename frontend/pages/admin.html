@@ -92,23 +92,23 @@
             </div>
         </article>
         <article>
-            <h1>Uppdatera/Lägg till</h1>
+            <h1>Ändra/Lägg till</h1>
 
-            <form><!--Add product form-->
+            <form id="changeAddForm"><!--Add product form-->
                 <fieldset>
-                    <label>Namn</label>
-                    <input type="text">
-                    <label>Konsol</label>
-                    <input type="password">
-                    <label>Information</label>
-                    <input type="text">
-                    <label>Pris</label>
-                    <input type="text">
-                    <label>Bild</label>
-                    <input type="text">
-                    <label>Antal</label>
-                    <input type="text">
-                    <input type="submit" value="Lägg till produkt">
+                    <label for="name">Namn</label>
+                    <input type="text" name="name" id="name">
+                    <label for="consoleType">Konsol</label>
+                    <input type="text" name="consoleType" id="consoleType">
+                    <label for="info">Information</label>
+                    <input type="text" name="info" id="info">
+                    <label for="price">Pris</label>
+                    <input type="text" name="price" id="price">
+                    <label for="imagePath">Bild url</label>
+                    <input type="text" name="imagePath" id="imagePath">
+                    <label for="amount">Antal</label>
+                    <input type="text" name="amount" id="amount">
+                    <input type="submit" value="Ändra/Lägg till produkt">
                 </fieldset>
             </form>
 
