@@ -678,12 +678,16 @@ function deleteProduct(){
 
     fetch("http://its.teknikum.it:8080/tuvestams-spel-shop/resources/product", {
         method: "DELETE",
-        mode: 'no-cors',
+        mode: 'cors',
         headers: {
-            'productId': productId
+            'productId': JSON.stringify(productId)
         },
         }).then((response) => {
             console.log("Status : " + response.status);
+            
+            if(response.ok){
+                id.parentNode.removeChild(id.parentNode);
+            }
 
             return response.json();
         }).catch(err => {
