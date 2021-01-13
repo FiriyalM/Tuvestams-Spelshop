@@ -8,6 +8,7 @@ package com.te4.order;
 import com.google.gson.Gson;
 import java.util.List;
 import com.te4.user.User;
+import java.util.ArrayList;
 import javax.ejb.EJB;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -60,8 +61,8 @@ public class OrderResource {
     @Consumes(MediaType.TEXT_PLAIN)
     public Response createOrder(String orderData){
         Gson gson = new Gson();
-        Order order = gson.fromJson(orderData, Order.class);
-        if(orderBean.createOrder(order) == 1){
+        Order[] order = gson.fromJson(orderData, Order[].class);
+        if(orderBean.createOrder(order) >= 1){
            return Response.ok().build();
         }else{
             return Response.status(Response.Status.BAD_REQUEST).build();
@@ -77,7 +78,7 @@ public class OrderResource {
     public Response deleteOrder(@HeaderParam("orderId")String orderId){
         Gson gson = new Gson();
         Order order = gson.fromJson(orderId, Order.class);
-        if(orderBean.deleteOrder(order) == 1){
+        if(orderBean.deleteOrder(order) >= 1){
            return Response.ok().build();
         }else{
             return Response.status(Response.Status.BAD_REQUEST).build();
@@ -98,7 +99,7 @@ public class OrderResource {
     public Response changeOrder(String orderData){
         Gson gson = new Gson();
         Order order = gson.fromJson(orderData, Order.class);
-        if(orderBean.updateOrder(order) == 1){
+        if(orderBean.updateOrder(order) >= 1){
            return Response.ok().build();
         }else{
             return Response.status(Response.Status.BAD_REQUEST).build();

@@ -22,23 +22,30 @@ import javax.ejb.Stateless;
  */
 @Stateless
 public class OrderBean {
-    
+    static long orders = 0;
     /**
      * den roppars när man gör en fetch från http://localhost:8080/Backend/resources/product , Method POST 
      * metoden sparar en order information i databasen
      * */
-    public int createOrder(Order order){
+    //skapa en for lopp där den gå igenom alla ordrar.
+    public int createOrder(Order[] order){
+        long orderId = orders++;
+        
         try (Connection con = ConnectionFactory.getConnection()){
-           String createOrder = "INSERT INTO `order`(`customerNumber`, `orderId`, `productId`, `amountPurchased`, `purchaseDate`) "
-                   + "VALUES (?,?,?,?,?)";
-           PreparedStatement pstmt = con.prepareStatement(createOrder);
-           pstmt.setInt(1,order.getCustomerNumber());
-           pstmt.setInt(2,order.getOrderId());
-           pstmt.setInt(3, order.getProductId());
-           pstmt.setInt(4, order.getAmountPurchased());
-           pstmt.setString(5, order.getPurchaseDate());
-           int rows = pstmt.executeUpdate();
-           return rows;
+           String createOrder = "INSERT INTO `order`( `customerNumber`, `orderId`, `productId`, `amountPurchased`, `purchaseDate` ) "
+                   + "VALUES( ( SELECT `customerNumber` FROM `userinfo` WHERE `userName` = ? ), ?, ?, ?, ?)";
+            int rows = 0 ;
+            for (int i = 0; i < order.length; i++) {
+                PreparedStatement pstmt = con.prepareStatement(createOrder);
+                pstmt.setString(1, order[i].getUserName());
+                pstmt.setLong(2, orderId); 
+                pstmt.setInt(3, order[i].getProductId());
+                pstmt.setInt(4, order[i].getAmountPurchased());
+                pstmt.setString(5, order[i].getPurchaseDate());
+               
+                rows += pstmt.executeUpdate();
+            } 
+                return rows;
        } catch (Exception e) {
            System.out.println("Error OrderBean.createOrder: " +e.getMessage());
            return 0;
@@ -68,14 +75,13 @@ public class OrderBean {
      * */
     public int updateOrder(Order order){
         try (Connection con = ConnectionFactory.getConnection()){
-           String updateOrderData = "UPDATE `order` SET `customerNumber`=?,`orderId`=?,`productId`=?,`amountPurchased`=?,`purchaseDate`=? WHERE orderId=?";
+           String updateOrderData = "UPDATE `order` SET `productId`=?,`amountPurchased`=?,`purchaseDate`=? WHERE orderId=?";
            PreparedStatement pstmt = con.prepareStatement(updateOrderData);
-           pstmt.setInt(1,order.getCustomerNumber());
-           pstmt.setInt(2,order.getOrderId());
-           pstmt.setInt(3, order.getProductId());
-           pstmt.setInt(4, order.getAmountPurchased());
-           pstmt.setString(5, order.getPurchaseDate());
-           pstmt.setInt(6,order.getOrderId());
+           
+           pstmt.setInt(1, order.getProductId());
+           pstmt.setInt(2, order.getAmountPurchased());
+           pstmt.setString(3, order.getPurchaseDate());
+           pstmt.setInt(4,order.getOrderId());
            int rows = pstmt.executeUpdate();
            return rows;
        } catch (Exception e) {
@@ -105,7 +111,7 @@ public class OrderBean {
             ResultSet data = stmt.executeQuery();
             
             while(data.next()){
-                int customerNumber = data.getInt("customerNumber");
+                String customerNumber = data.getString("customerNumber");
                 int orderId = data.getInt("orderId");
                 int productId = data.getInt("productId");
                 int amountPurchased = data.getInt("amountPurchased");
@@ -129,7 +135,7 @@ public class OrderBean {
             String city = data.getString("city");
             
             UserInfo userInfo = new UserInfo(email,addres,city, zipCode, phoneNumber);
-            orderData.add(userInfo);
+            orderData.add(userInfo);//
             
             return orderData;
         } catch (Exception e) {

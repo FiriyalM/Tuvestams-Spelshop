@@ -12,26 +12,26 @@ import javax.ejb.Stateless;
  * @author Mohame Nader Alhamwi
  */
 public class Order {
-    private int customerNumber;
+    private String userName;
     private int orderId;
     private int productId;
     private int amountPurchased;
     private String purchaseDate;
 
-    public Order(int customerNumber, int orderId, int productId, int amountPurchased, String purchaseDate) {
-        this.customerNumber = customerNumber;
+    public Order(String userName, int orderId, int productId, int amountPurchased, String purchaseDate) {
+        this.userName = userName;
         this.orderId = orderId;
         this.productId = productId;
         this.amountPurchased = amountPurchased;
         this.purchaseDate = purchaseDate;
     }
 
-    public int getCustomerNumber() {
-        return customerNumber;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setCustomerNumber(int userName) {
-        this.customerNumber = userName;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public int getOrderId() {
