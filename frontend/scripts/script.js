@@ -99,10 +99,14 @@ async function init(){
 
     //If admin page
     if(document.querySelector("body").getAttribute("id") === "admin"){
-        searchProductForm = document.getElementById("searchProduct");
-        searchUserForm = document.getElementById("searchUser");
+        searchProductForm = document.getElementById("searchProduct");  //Search product form on admin site
+        searchUserForm = document.getElementById("searchUser");  //Search user form on admin site
 
-        searchProductForm.addEventListener("submit", searchProduct);
+        searchProductForm.addEventListener("submit", searchProduct);  //search product on click
+
+        document.getElementById("changeAddForm").submit.addEventListener("click", () =>{  //Create product on click
+            createProduct(document.getElementById("changeAddForm"));  //Create product (form reference)
+        });
     }
 
     //If product page
@@ -665,8 +669,56 @@ async function getOrders(){
     });
 }
 
-function changeProduct(){
+function createProduct(values){  //values is a reference to the form elements
+    let productInfo = {
+        "name": values.name.value,
+        "consoleType": values.consoleType.value,
+        "info": values.info.value,
+        "price": values.price.value,
+        "imagePath": values.imagePath.value,
+        "amountInStock": values.amount.value
+    };
 
+    fetch("http://its.teknikum.it:8080/tuvestams-spel-shop/resources/product", {
+        method: "POST",
+        mode: "no-cors",
+        headers:{
+            "Content-Type": "text/plain"
+        },
+        body: JSON.stringify(productInfo)
+    }).then((response) => {
+        console.log("Status : " + response.status);
+
+        return response.json();
+    }).catch(err =>{
+        console.error(err);
+    });
+}
+
+function editProduct(values){  //values is a reference to the form elements
+    let productInfo = {
+        "name": values.name.value,
+        "consoleType": values.consoleType.value,
+        "info": values.info.value,
+        "price": values.price.value,
+        "imagePath": values.imagePath.value,
+        "amountInStock": values.amount.value
+    };
+
+    fetch("http://its.teknikum.it:8080/tuvestams-spel-shop/resources/product", {
+        method: "POST",
+        mode: "no-cors",
+        headers:{
+            "Content-Type": "text/plain"
+        },
+        body: JSON.stringify(productInfo)
+    }).then((response) => {
+        console.log("Status : " + response.status);
+
+        return response.json();
+    }).catch(err =>{
+        console.error(err);
+    });
 }
 
 function deleteProduct(){
@@ -684,7 +736,7 @@ function deleteProduct(){
         },
         }).then((response) => {
             console.log("Status : " + response.status);
-            
+
             if(response.ok){
                 id.parentNode.removeChild(id.parentNode);
             }
@@ -725,6 +777,7 @@ async function searchConsoleType(){
     }
 }
 
+/*Fetches a product(s) by id*/
 async function getProduct(){
     let product;  //Holds the product 
 
@@ -813,19 +866,27 @@ function createOrderSection(){
 }
 
 function fillEditForm(){
-    sessionStorage.setItem("product", event.target.value);
-    
-    let form = document.getElementById("changeAddForm");
+    sessionStorage.setItem("product", event.target.value);  //Clicked product id saved in product
 
-    getProduct().then(productInfo => {
-        sessionStorage.removeItem("product");
+    let form = document.getElementById("changeAddForm");  //reference to the Admin page change/add form
+
+    getProduct().then(productInfo => {  //Promise from fetch
+        sessionStorage.removeItem("product");  //Clear the session storage
     
+        /* Fill in the form with the product info */
         form.name.value = productInfo[0].productName;
         form.consoleType.value = productInfo[0].consoleType;
         form.info.value = productInfo[0].info;
         form.price.value = productInfo[0].price;
         form.imagePath.value = productInfo[0].imagePath;
         form.amount.value = productInfo[0].amountInStock;
-    });
+    
+        form.submit.value = "Ändra produckt";  //Change button text  
 
+        form.submit.removeEventListener("click", createProduct, false);
+
+        form.submit.addEventListener("click", ()=>{
+            editProduct(form);  //On button click, edit the existing product
+        });
+    });
 }

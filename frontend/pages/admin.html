@@ -94,7 +94,7 @@
         <article>
             <h1>Ändra/Lägg till</h1>
 
-            <form id="changeAddForm"><!--Add product form-->
+            <form id="changeAddForm" onsubmit="return false"><!--Add product form-->
                 <fieldset>
                     <label for="name">Namn</label>
                     <input type="text" name="name" id="name">
@@ -108,7 +108,7 @@
                     <input type="text" name="imagePath" id="imagePath">
                     <label for="amount">Antal</label>
                     <input type="text" name="amount" id="amount">
-                    <input type="submit" value="Ändra/Lägg till produkt">
+                    <input type="submit" value="Lägg till produkt" name="submit" id="submit">
                 </fieldset>
             </form>
 
