@@ -5,18 +5,20 @@
  */
 package com.te4.user;
 
+import java.util.List;
+
 /**
  *
  * @author Mohame Nader Alhamwi
  */
 public class UserInfo {
-    private int customerNumber;
     private String userName;
     private String email;
     private String address;
     private String city;
     private int zipCode;
     private String phoneNumber;
+    private List orders;
 
     public UserInfo(String email, String address, String city, int zipCode, String phoneNumber) {
         this.email = email;
@@ -24,6 +26,16 @@ public class UserInfo {
         this.city = city;
         this.zipCode = zipCode;
         this.phoneNumber = phoneNumber;
+    }
+
+    public UserInfo(String userName, String email, String address, String city, int zipCode, String phoneNumber, List orders) {
+        this.userName = userName;
+        this.email = email;
+        this.address = address;
+        this.city = city;
+        this.zipCode = zipCode;
+        this.phoneNumber = phoneNumber;
+        this.orders = orders;
     }
     
     public UserInfo(String userName, String email, String adress, String city, int zipCode, String phoneNumber) {
@@ -35,12 +47,12 @@ public class UserInfo {
         this.phoneNumber = phoneNumber;
     }
 
-    public int getCustomerNumber() {
-        return customerNumber;
+    public List getOrders() {
+        return orders;
     }
 
-    public void setCustomerNumber(int customerNumber) {
-        this.customerNumber = customerNumber;
+    public void setOrders(List orders) {
+        this.orders = orders;
     }
 
     public String getUserName() {

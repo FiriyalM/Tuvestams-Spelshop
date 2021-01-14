@@ -35,9 +35,8 @@ public class UserResource {
     public Response logInUser(@HeaderParam("Authorization") String userData){
         
         User user = userBean.createUser(userData);
-        
         if(userBean.logInUser(user)){
-            return Response.ok("Welcome to our sectrer res api").build();
+            return Response.ok(user.isAdminStatus()).build();
         }else{
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
