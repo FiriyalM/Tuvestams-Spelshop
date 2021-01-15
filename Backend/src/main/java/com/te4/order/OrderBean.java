@@ -93,9 +93,13 @@ public class OrderBean {
     /**
      * den roppars när man gör en fetch från http://localhost:8080/Backend/resources/product , Method GET 
      * metoden Söker efter order med hjälp av !!
-     * */
-    public List<Object> showOrder (User user){
+     *
+     * @param orderList
+     * @return  */
+    public List<Object> showOrder (OrderList orderList){
         List<Object> orderData = new ArrayList<>();
+        List<Object> allOrderData = new ArrayList<>();
+        List<Object> allProductInorder = new ArrayList<>();
         try (Connection con = ConnectionFactory.getConnection()){
             
            String showOrders = "SELECT "
@@ -107,40 +111,112 @@ public class OrderBean {
                    + "FROM `order` JOIN `userInfo` ON(ORDER.customerNumber) =(userinfo.customerNumber) WHERE `userName` =? ";
            
             PreparedStatement stmt = con.prepareStatement(showOrders);
-            stmt.setString(1, user.getUserName());
-            ResultSet data = stmt.executeQuery();
+            stmt.setString(1, orderList.getUserName());
+            //spaarar order info i orderResData
+            ResultSet orderResData = stmt.executeQuery();
             
-            while(data.next()){
-                String customerNumber = data.getString("customerNumber");
-                int orderId = data.getInt("orderId");
-                int productId = data.getInt("productId");
-                int amountPurchased = data.getInt("amountPurchased");
-                String purchaseDate = data.getString("purchaseDate");
-                
-                Order newOrder = new Order(customerNumber, orderId, productId, amountPurchased, purchaseDate);
-                orderData.add(newOrder);
-            }
-            
+            //hämtar användarens info
             String getUserInfo = "SELECT `email`, `phoneNumber`, `address`, `zipCode`, `city` FROM `userInfo` WHERE `userName`=?";
             stmt = con.prepareStatement(getUserInfo);
-            stmt.setString(1, user.getUserName());
-            data = stmt.executeQuery();
+            stmt.setString(1, orderList.getUserName());
+            //sparar user info i userRsData
+            ResultSet userRsData = stmt.executeQuery();
+
+            userRsData.next();
+
+            String email = userRsData.getString("email");
+            String phoneNumber = userRsData.getString("phoneNumber");
+            String addres = userRsData.getString("address");
+            int zipCode = userRsData.getInt("zipCode");
+            String city = userRsData.getString("city");
             
-            data.next();
-            
-            String email = data.getString("email");
-            String phoneNumber = data.getString("phoneNumber");
-            String addres = data.getString("address");
-            int zipCode = data.getInt("zipCode");
-            String city = data.getString("city");
-            
-            UserInfo userInfo = new UserInfo(email,addres,city, zipCode, phoneNumber);
-            orderData.add(userInfo);//
-            
-            return orderData;
+            while(orderResData.next()){
+               String getProductInfo = "SELECT `productName`,`consoleType`, `price`, `imgPath` FROM `product` WHERE productId = ?";
+               stmt = con.prepareStatement(getProductInfo);
+               stmt.setInt(1, orderResData.getInt("productId"));
+               //sparar productens info i productRsData
+               ResultSet productRsData = stmt.executeQuery();
+
+               productRsData.next();
+
+               String productName = productRsData.getString("productName");
+               String consoleType = productRsData.getString("consoleType");
+               String price = productRsData.getString("price");
+               String imagePath = productRsData.getString("imgPath");
+               
+                //String customerNumber = data.getString("customerNumber");
+                int orderId = orderResData.getInt("orderId");
+                int productId = orderResData.getInt("productId");
+                int amountPurchased = orderResData.getInt("amountPurchased");
+                String purchaseDate = orderResData.getString("purchaseDate");
+                
+                //spara alla info i listn
+                OrderList order = new OrderList(orderId, purchaseDate);
+                OrderList ProductInfo = new OrderList(productId, amountPurchased,productName, consoleType, imagePath, price);
+                
+                allProductInorder.add(ProductInfo);
+                orderData.add(order);
+                orderData.add(allProductInorder);
+
+            }
+                UserInfo userInfo = new UserInfo(orderList.getUserName(), email, addres, city, zipCode, phoneNumber, orderData);
+                allOrderData.add(userInfo);
+                
+            return allOrderData;
         } catch (Exception e) {
            System.out.println("Error OrderBean.showOrder: " +e.getMessage());
             return null;
         }
     }
 }
+
+
+/*
+        "orders":
+        [
+            "orderId": 2,
+            "purchaseDate": "2027-01-12"
+            "products": 
+            [
+                {
+                    "amountPurchased": 5,
+                    "consoleType": "PC",
+                    "imagePath": "img",
+                    "price": "199",
+                    "productId": 6,
+                    "productName": "Minecraft",
+                },
+                {
+                    "amountPurchased": 5,
+                    "consoleType": "PC",
+                    "imagePath": "img",
+                    "price": "199",
+                    "productId": 6,
+                    "productName": "Minecraft",
+                }
+            ]   
+            "orderId": 0,
+            "purchaseDate": "2027-01-12"
+            "products": 
+            [
+                {
+                    "amountPurchased": 5,
+                    "consoleType": "PC",
+                    "imagePath": "img",
+                    "price": "199",
+                    "productId": 6,
+                    "productName": "Minecraft",
+                },
+                {
+                    "amountPurchased": 5,
+                    "consoleType": "PC",
+                    "imagePath": "img",
+                    "price": "199",
+                    "productId": 6,
+                    "productName": "Minecraft",
+                }
+            ]
+        ]
+
+
+*/

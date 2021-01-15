@@ -12,14 +12,14 @@ package com.te4.user;
 public class User {
     private String userName;
     private String password;
-    private String adminStatus;
+    private int adminStatus;
 
     public User(String userName, String password) {
         this.userName = userName;
         this.password = password;
     }
 
-    public User(String userName, String password, String adminStatus) {
+    public User(String userName, String password, int adminStatus) {
         this.userName = userName;
         this.password = password;
         this.adminStatus = adminStatus;
@@ -41,11 +41,11 @@ public class User {
         this.password = password;
     }
 
-    public String isAdminStatus() {
+    public int isAdminStatus() {
         return adminStatus;
     }
 
-    public void setAdminStatus(String adminStatus) {
+    public void setAdminStatus(int adminStatus) {
         this.adminStatus = adminStatus;
     }
 }

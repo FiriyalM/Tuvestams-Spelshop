@@ -34,9 +34,9 @@ public class OrderResource {
     @GET
     public Response showOrder(@HeaderParam("userName") String userName){
         Gson gson = new Gson();
-        User user = gson.fromJson(userName, User.class);
+        OrderList orderList = gson.fromJson(userName, OrderList.class);
         
-        List<Object> newOrder = orderBean.showOrder(user);
+        List<Object> newOrder = orderBean.showOrder(orderList);
         
         if(newOrder == null){
             return Response.status(Response.Status.NO_CONTENT).build();

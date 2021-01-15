@@ -30,7 +30,6 @@ public class UserBean {
         int colon = auth.indexOf(":");
         String userName = auth.substring(0, colon);
         String password = auth.substring(colon+1);
-        System.out.println(auth);
         return new User(userName, password);
     }
     
@@ -50,7 +49,7 @@ public class UserBean {
             if(data.next()){
                 String bcryptHashString = data.getString("password");
                 BCrypt.Result result = BCrypt.verifyer().verify(user.getPassword().toCharArray(), bcryptHashString);
-                
+                user.setAdminStatus(data.getInt("adminStatus"));
                 return result.verified;
             }else{
                 return false;
