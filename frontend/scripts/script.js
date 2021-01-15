@@ -34,6 +34,13 @@ async function init(){
     
             document.getElementById("userPageButton").onclick = goToUser;  //Goes to the user page
             document.getElementById("logOutButton").onclick = logOut;  //Log out
+
+            if(sessionStorage.getItem("adminStatus") === "1"){  //If admin
+                document.getElementById("adminButton").style.display = "inherit";  //Show button
+                document.getElementById("adminButton").onclick = goToAdmin;  //Goes to the admin page
+            }else{  //if not admin
+                document.getElementById("adminButton").style.display = "none";  //Hide button
+            }
         }else{  //Else show the forms
             document.getElementById("logIn").style.display = "inherit";  //show log in
             document.getElementById("createAcc").style.display = "inherit";  //show create account
@@ -131,6 +138,14 @@ function goToUser(){
     }
 }
 
+function goToAdmin(){
+    if(document.querySelector("body").getAttribute("id") === "index"){  //Different file path from index
+        location.replace("./pages/admin.html");
+    }else{
+        location.replace("./admin.html");
+    }
+}
+
 /**
  * Checks with the database to see if the user with that passwords exists and returns true/false
  */
@@ -148,7 +163,11 @@ function logIn(){
         },
         }).then((response) => {
             console.log(response.status);
-            console.log("adminStatus: " + response);
+            
+            response.text().then(function(text){
+                sessionStorage.setItem("adminStatus", text);  //Sets admin status to true if the user is an admin
+            });
+            
             if(response.ok){
                 sessionStorage.setItem("userName", name);  //Saves username in sessionStorage
                 location.reload();
@@ -167,6 +186,7 @@ function logIn(){
  */
 function logOut(){
     sessionStorage.removeItem("userName");  //Removes the logged in user
+    sessionStorage.removeItem("adminStatus");  //Removes admin status from the user
     sessionStorage.removeItem("cart");  //Clears the cart
     location.reload();  //reloads the page
 }
@@ -193,7 +213,7 @@ function createAccount(){
 
     fetch("http://its.teknikum.it:8080/tuvestams-spel-shop/resources/user", {
         method: "POST",
-        mode: 'no-cors',
+        mode: 'cors',
         headers: {  
             'Content-Type': 'text/plain'
         },
@@ -201,6 +221,9 @@ function createAccount(){
         }).then((response) => {
             if(response.ok){
                 sessionStorage.setItem("userName", name);  //Sparar användare
+                sessionStorage.setItem("adminStatus", "false");  //Sets admin status to false
+
+                location.reload();
             }else{
                 alert("Det gick inte att skapa kontot")
             }
